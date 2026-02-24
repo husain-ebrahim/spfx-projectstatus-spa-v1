@@ -13,8 +13,7 @@ import {
   MessageBar,
   MessageBarType,
   Spinner,
-  SpinnerSize,
-  DefaultButton
+  SpinnerSize
 } from '@fluentui/react';
 
 import { DashboardPage } from './DashBoardPage';
@@ -156,11 +155,14 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
               <span className={styles.appMainMeta}>
                 Last refresh: {lastRefresh.toLocaleTimeString()}
               </span>
-              <DefaultButton
+              <button
+                type="button"
+                className={styles.appRefreshButton}
                 onClick={() => void loadData()}
-                iconProps={{ iconName: 'Refresh' }}
-                text="Refresh"
-              />
+              >
+                <Icon iconName="Refresh" />
+                <span>Refresh</span>
+              </button>
             </div>
           </header>
 

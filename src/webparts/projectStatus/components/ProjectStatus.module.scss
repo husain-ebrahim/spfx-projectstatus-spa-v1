@@ -100,25 +100,26 @@
 }
 
 .sideNavItemActive {
-  background: rgba(249, 0, 25, 0.26);
+  background: rgba(28, 110, 228, 0.36);
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.45);
 }
 
 .sideNavItemPrimary {
-  background: rgba(100, 52, 250, 0.28);
-  border-color: rgba(255, 255, 255, 0.32);
-  color: #ffffff;
+  background: #31e7df;
+  border-color: #31e7df;
+  color: #07114c;
 }
 
 .sideNavItemPrimary:hover {
-  background: rgba(100, 52, 250, 0.4);
-  border-color: rgba(255, 255, 255, 0.45);
+  background: #25cbc4;
+  border-color: #25cbc4;
 }
 
 .sideNavItemPrimaryActive {
-  background: rgba(249, 0, 25, 0.4);
-  border-color: rgba(255, 255, 255, 0.52);
+  background: #1c6ee4;
+  border-color: #1c6ee4;
+  color: #ffffff;
 }
 
 .sideNavItemIcon {
@@ -183,6 +184,30 @@
   display: flex;
   align-items: center;
   gap: 10px;
+}
+
+.appRefreshButton {
+  border: 1px solid #1c6ee4;
+  border-radius: 10px;
+  background: linear-gradient(140deg, #1c6ee4 0%, #6434fa 100%);
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 11px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: filter 120ms ease-out, transform 120ms ease-out;
+}
+
+.appRefreshButton:hover {
+  filter: brightness(1.06);
+  transform: translateY(-1px);
+}
+
+.appRefreshButton:active {
+  transform: translateY(0);
 }
 
 .appMainMeta {
@@ -439,7 +464,7 @@
 
 .psModalContent {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -1027,9 +1052,6 @@
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
-  .psModalContent {
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-  }
 
   .psFormShell {
     grid-template-columns: minmax(0, 1fr);

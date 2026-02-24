@@ -30,7 +30,12 @@ export const ProjectsPage: React.FC<IProjectsPageProps> = ({
   });
 
   const selectedProject = projects.find(p => p.id === selectedProjectId);
-  const selectedProjectUpdates = items.filter(i => i.projectId === selectedProjectId);
+  const selectedProjectUpdates = items
+    .filter(i => i.projectId === selectedProjectId)
+    .sort(
+      (a, b) =>
+        new Date(b.created).getTime() - new Date(a.created).getTime()
+    );
 
   return (
     <div className={styles.psSection}>

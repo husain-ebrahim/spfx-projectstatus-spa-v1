@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { IProjectStatusProps } from './IProjectStatusProps';
-import { IProjectStatusState, PageKey } from './IProjectStatusState';
+import { PageKey } from './IProjectStatusState';
 import { ProjectStatusService } from '../services/ProjectStatusService';
 import { IProjectStatusItem } from './IProjectStatusItem';
 
@@ -19,72 +19,62 @@ import { UpdatePage } from './UpdatePage';
 
 import styles from './ProjectStatus.module.scss';
 
+interface IProjectLookup {
+  id: number;
+  title: string;
+}
+
 export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
   const service = useMemo(() => new ProjectStatusService(context), [context]);
 
-  const [state, setState] = useState<IProjectStatusState>({
-    items: [],
-    isLoading: true,
-    error: undefined,
-    projectsLookup: [],
-    isLoadingProjects: true,
-    currentPage: 'dashboard'
-  });
+  const [items, setItems] = useState<IProjectStatusItem[]>([]);
+  const [projectsLookup, setProjectsLookup] = useState<IProjectLookup[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingProjects, setIsLoadingProjects] = useState(true);
+  const [error, setError] = useState<string>();
+  const [currentPage, setCurrentPage] = useState<PageKey>('dashboard');
+  const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
-  const loadData = async () => {
+  const loadData = useCallback(async () => {
     try {
-      setState(prev => ({ ...prev, isLoading: true, error: undefined }));
+      setIsLoading(true);
+      setError(undefined);
       const [statuses, projects] = await Promise.all([
         service.getStatuses(),
         service.getProjectsLookup()
       ]);
 
-      setState(prev => ({
-        ...prev,
-        items: statuses,
-        projectsLookup: projects,
-        isLoading: false,
-        isLoadingProjects: false
-      }));
+      setItems(statuses);
+      setProjectsLookup(projects);
+      setLastRefresh(new Date());
     } catch (err: any) {
-      setState(prev => ({
-        ...prev,
-        isLoading: false,
-        isLoadingProjects: false,
-        error: err.message || 'Error loading data'
-      }));
+      setError(err.message || 'Error loading data');
+    } finally {
+      setIsLoading(false);
+      setIsLoadingProjects(false);
     }
-  };
+  }, [service]);
 
   useEffect(() => {
-    loadData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const onPageChange = (page: PageKey) => {
-    setState(prev => ({ ...prev, currentPage: page }));
-  };
+    void loadData();
+  }, [loadData]);
 
   const onStatusCreated = async () => {
     try {
       const statuses = await service.getStatuses();
-      setState(prev => ({
-        ...prev,
-        items: statuses,
-        currentPage: 'dashboard'
-      }));
+      setItems(statuses);
+      setCurrentPage('dashboard');
+      setLastRefresh(new Date());
     } catch (err: any) {
-      setState(prev => ({
-        ...prev,
-        error: err.message || 'Error refreshing data after save'
-      }));
+      setError(err.message || 'Error refreshing data after save');
     }
   };
 
-  const { items, isLoading, error, projectsLookup, isLoadingProjects, currentPage } =
-    state;
-
   const isDashboard = currentPage === 'dashboard';
+  const navigationItems: { key: PageKey; icon: string; label: string }[] = [
+    { key: 'dashboard', icon: 'LineChart', label: 'Dashboard' },
+    { key: 'addUpdate', icon: 'Add', label: 'Add update' }
+  ];
 
   return (
     <div className={styles.appRoot}>
@@ -100,31 +90,21 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
           </div>
 
           <nav className={styles.sideNavNav}>
-            <button
-              className={
-                currentPage === 'dashboard'
-                  ? `${styles.sideNavItem} ${styles.sideNavItemActive}`
-                  : styles.sideNavItem
-              }
-              onClick={() => onPageChange('dashboard')}
-              type="button"
-            >
-              <Icon iconName="LineChart" className={styles.sideNavItemIcon} />
-              <span className={styles.sideNavItemLabel}>Dashboard</span>
-            </button>
-
-            <button
-              className={
-                currentPage === 'addUpdate'
-                  ? `${styles.sideNavItem} ${styles.sideNavItemActive}`
-                  : styles.sideNavItem
-              }
-              onClick={() => onPageChange('addUpdate')}
-              type="button"
-            >
-              <Icon iconName="Add" className={styles.sideNavItemIcon} />
-              <span className={styles.sideNavItemLabel}>Add update</span>
-            </button>
+            {navigationItems.map(item => (
+              <button
+                key={item.key}
+                className={
+                  currentPage === item.key
+                    ? `${styles.sideNavItem} ${styles.sideNavItemActive}`
+                    : styles.sideNavItem
+                }
+                onClick={() => setCurrentPage(item.key)}
+                type="button"
+              >
+                <Icon iconName={item.icon} className={styles.sideNavItemIcon} />
+                <span className={styles.sideNavItemLabel}>{item.label}</span>
+              </button>
+            ))}
           </nav>
 
           <div className={styles.sideNavFooter}>
@@ -149,10 +129,10 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
 
             <div className={styles.appMainToolbar}>
               <span className={styles.appMainMeta}>
-                Last refresh: {new Date().toLocaleTimeString()}
+                Last refresh: {lastRefresh.toLocaleTimeString()}
               </span>
               <DefaultButton
-                onClick={loadData}
+                onClick={() => void loadData()}
                 iconProps={{ iconName: 'Refresh' }}
                 text="Refresh"
               />
@@ -163,12 +143,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
             <div className={styles.psMessageBar}>
               <MessageBar
                 messageBarType={MessageBarType.error}
-                onDismiss={() =>
-                  setState(prev => ({
-                    ...prev,
-                    error: undefined
-                  }))
-                }
+                onDismiss={() => setError(undefined)}
               >
                 {error}
               </MessageBar>

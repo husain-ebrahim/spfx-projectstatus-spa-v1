@@ -1,59 +1,65 @@
-/* === APP LAYOUT – FULL WIDTH, MODERN BG === */
+:root {
+  --ps-bg-start: #eef3f8;
+  --ps-bg-end: #f8fafc;
+  --ps-panel: #ffffff;
+  --ps-panel-border: #d7e0ea;
+  --ps-text: #1b2b3a;
+  --ps-text-muted: #5d6f82;
+  --ps-brand: #0e4f7d;
+  --ps-brand-soft: #d8e9f6;
+  --ps-accent: #1570a6;
+  --ps-shadow: 0 16px 30px rgba(11, 35, 57, 0.08);
+}
 
 .appRoot {
   width: 100%;
   min-height: 100vh;
-  box-sizing: border-box;
   padding: 0;
-  background:
-    radial-gradient(circle at top left, #e0f2fe 0, transparent 45%),
-    radial-gradient(circle at bottom right, #fee2e2 0, transparent 45%),
-    linear-gradient(135deg, #f4f4f5 0%, #e5e7eb 40%, #ffffff 100%);
+  background: linear-gradient(170deg, var(--ps-bg-start) 0%, var(--ps-bg-end) 55%, #ffffff 100%);
+  color: var(--ps-text);
+  box-sizing: border-box;
 }
 
 .appShell {
-  display: flex;
-  min-height: 100vh;
   width: 100%;
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 270px minmax(0, 1fr);
 }
 
-/* SIDE NAVIGATION */
-
 .sideNav {
-  width: 250px;
-  padding: 20px 18px;
-  box-sizing: border-box;
+  background: linear-gradient(180deg, #0b2d46 0%, #0f3b5d 100%);
+  color: #eaf2f9;
+  border-right: 1px solid rgba(172, 197, 219, 0.3);
+  padding: 26px 18px;
   display: flex;
   flex-direction: column;
-  gap: 16px;
-  background: radial-gradient(circle at top left, #111827 0, #020617 50%);
-  color: #e5e7eb;
-  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.4);
+  gap: 22px;
 }
 
 .sideNavHeader {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
 }
 
 .sideNavBrandMark {
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   border-radius: 10px;
-  background: conic-gradient(from 140deg, #38bdf8, #6366f1, #f97316, #38bdf8);
+  background: linear-gradient(140deg, #2ca58d 0%, #2d7db4 100%);
+  font-size: 15px;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: white;
+  color: #ffffff;
 }
 
 .sideNavBrandText {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .sideNavBrandTitle {
@@ -63,109 +69,98 @@
 
 .sideNavBrandSubtitle {
   font-size: 11px;
-  color: #9ca3af;
+  color: #b7cce0;
 }
 
 .sideNavNav {
-  margin-top: 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 7px;
 }
 
 .sideNavItem {
-  border: none;
-  outline: none;
   width: 100%;
-  padding: 8px 10px;
-  border-radius: 999px;
+  border: 1px solid transparent;
   background: transparent;
-  color: #e5e7eb;
+  color: #d8e7f4;
+  border-radius: 10px;
+  padding: 9px 11px;
+  text-align: left;
   display: flex;
   align-items: center;
   gap: 8px;
   font-size: 13px;
   cursor: pointer;
-  transition:
-    background 120ms ease-out,
-    color 120ms ease-out,
-    transform 80ms ease-out,
-    box-shadow 120ms ease-out;
+  transition: background 120ms ease-out, border-color 120ms ease-out;
 }
 
 .sideNavItem:hover {
-  background: rgba(148, 163, 184, 0.26);
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.6);
+  background: rgba(180, 211, 237, 0.15);
+  border-color: rgba(180, 211, 237, 0.34);
 }
 
 .sideNavItemActive {
-  background: linear-gradient(135deg, #38bdf8, #6366f1);
-  color: white;
-  box-shadow: 0 18px 32px rgba(37, 99, 235, 0.7);
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.3);
 }
 
 .sideNavItemIcon {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .sideNavItemLabel {
   flex: 1;
-  text-align: left;
 }
 
 .sideNavFooter {
   margin-top: auto;
-  padding-top: 10px;
-  border-top: 1px solid rgba(148, 163, 184, 0.4);
-  font-size: 11px;
+  border-top: 1px solid rgba(190, 215, 236, 0.25);
+  padding-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 2px;
-  color: #9ca3af;
+  gap: 3px;
 }
 
 .sideNavEnvLabel {
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
   font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #b7cce0;
 }
 
 .sideNavEnvValue {
-  font-weight: 500;
+  font-size: 12px;
+  color: #eaf2f9;
 }
 
-/* MAIN AREA */
-
 .appMain {
-  flex: 1;
-  padding: 20px 24px 24px;
-  box-sizing: border-box;
+  padding: 22px 26px 26px;
   display: flex;
   flex-direction: column;
-  animation: fadeInUp 380ms ease-out;
+  box-sizing: border-box;
+  animation: fadeIn 240ms ease-out;
 }
 
 .appMainHeader {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 18px;
+  margin-bottom: 14px;
 }
 
 .appMainTitle {
   margin: 0;
-  font-size: 24px;
-  font-weight: 650;
-  letter-spacing: 0.02em;
-  color: #111827;
+  font-size: 30px;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
 }
 
 .appMainSubtitle {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: #4b5563;
+  margin: 6px 0 0;
+  color: var(--ps-text-muted);
+  font-size: 14px;
 }
 
 .appMainToolbar {
@@ -175,418 +170,335 @@
 }
 
 .appMainMeta {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 12px;
+  color: var(--ps-text-muted);
 }
 
 .appMainContent {
-  margin-top: 8px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
 .appMainLoading {
-  margin-top: 32px;
+  padding: 26px 0;
 }
-
-/* ALERT WRAPPER */
 
 .psMessageBar {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
-
-/* === DASHBOARD === */
 
 .psDashboard {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 14px;
 }
-
-/* KPI row */
 
 .psKpiRow {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
 }
 
 .psKpiCard {
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(6px);
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.1),
-    0 0 0 1px rgba(148, 163, 184, 0.25);
+  background: var(--ps-panel);
+  border: 1px solid var(--ps-panel-border);
+  box-shadow: var(--ps-shadow);
+  border-radius: 14px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  transition: transform 120ms ease-out, box-shadow 120ms ease-out;
-}
-
-.psKpiCard:hover {
-  transform: translateY(-2px);
-  box-shadow:
-    0 24px 52px rgba(15, 23, 42, 0.16),
-    0 0 0 1px rgba(148, 163, 184, 0.28);
+  gap: 5px;
 }
 
 .psKpiLabel {
+  color: var(--ps-text-muted);
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #6b7280;
+  letter-spacing: 0.09em;
 }
 
 .psKpiValue {
-  font-size: 24px;
-  font-weight: 650;
+  font-size: 26px;
+  line-height: 1.1;
+  font-weight: 700;
 }
 
 .psKpiHint {
-  font-size: 11px;
-  color: #9ca3af;
+  font-size: 12px;
+  color: var(--ps-text-muted);
+}
+
+.psKpiDeltaPositive,
+.psKpiDeltaNegative {
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .psKpiDeltaPositive {
-  font-size: 11px;
-  color: #15803d;
+  color: #1a7f40;
 }
 
 .psKpiDeltaNegative {
-  font-size: 11px;
-  color: #b91c1c;
+  color: #b42318;
 }
 
-/* Health strip */
-
 .psHealthStrip {
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.1),
-    0 0 0 1px rgba(148, 163, 184, 0.22);
+  background: var(--ps-panel);
+  border: 1px solid var(--ps-panel-border);
+  border-radius: 14px;
+  padding: 12px 14px;
 }
 
 .psHealthStripBar {
-  height: 10px;
+  margin-top: 8px;
+  height: 11px;
   border-radius: 999px;
   overflow: hidden;
   display: flex;
-  margin-top: 8px;
-  background: #e5e7eb;
+  background: #e8eef5;
 }
 
 .psHealthSegment {
   height: 100%;
-  transition: width 260ms ease-out;
 }
 
 .psHealthGreen {
-  background: #16a34a;
+  background: #19984f;
 }
 
 .psHealthYellow {
-  background: #facc15;
+  background: #dca53d;
 }
 
 .psHealthRed {
-  background: #dc2626;
+  background: #c93836;
 }
 
-/* Sections / headers */
-
 .psSection {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .psSectionHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
 }
 
 .psSectionHeader h2 {
   margin: 0;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 18px;
 }
 
 .psSectionTag {
-  padding: 2px 10px;
+  background: var(--ps-brand-soft);
+  color: var(--ps-brand);
   border-radius: 999px;
-  font-size: 11px;
-  background: rgba(15, 23, 42, 0.04);
-  color: #4b5563;
+  padding: 4px 10px;
+  font-size: 12px;
+  font-weight: 600;
 }
-
-/* Social feed grid */
 
 .psFeedGrid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  gap: 12px;
 }
 
 .psFeedCard {
-  padding: 14px 14px 10px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.97);
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.09),
-    0 0 0 1px rgba(148, 163, 184, 0.18);
+  background: var(--ps-panel);
+  border: 1px solid var(--ps-panel-border);
+  border-radius: 14px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  animation: fadeInUpSmall 260ms ease-out;
+  gap: 8px;
 }
 
 .psFeedHeader {
   display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.psFeedAvatar {
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #38bdf8, #6366f1);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
 }
 
 .psFeedHeaderText {
-  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 3px;
 }
 
 .psFeedProject {
-  font-weight: 600;
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 700;
 }
 
 .psFeedMeta {
-  font-size: 11px;
-  color: #6b7280;
   display: flex;
-  gap: 6px;
   align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--ps-text-muted);
 }
 
 .psFeedDot {
-  font-size: 10px;
+  color: #8aa0b5;
 }
-
-/* Existing health badges reused */
 
 .psHealthBadge {
   padding: 3px 10px;
   border-radius: 999px;
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
 }
 
 .psHealthGreenBadge {
-  background: #dcfce7;
-  color: #166534;
+  background: #e5f7ec;
+  color: #126638;
 }
 
 .psHealthYellowBadge {
-  background: #fef9c3;
-  color: #854d0e;
+  background: #fff5de;
+  color: #8a5a07;
 }
 
 .psHealthRedBadge {
-  background: #fee2e2;
-  color: #b91c1c;
+  background: #fde8e7;
+  color: #8d2422;
 }
-
-/* Progress */
 
 .psFeedProgressRow {
   display: flex;
-  justify-content: flex-start;
   gap: 14px;
-  margin-top: 4px;
 }
 
 .psFeedStat {
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
 .psFeedStatLabel {
-  font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #9ca3af;
+  font-size: 11px;
+  color: var(--ps-text-muted);
 }
 
 .psFeedStatValue {
   font-size: 13px;
   font-weight: 600;
-  color: #111827;
 }
 
 .psCardProgressBar {
-  position: relative;
-  height: 6px;
+  background: #e8eef5;
   border-radius: 999px;
-  background: #e5e7eb;
-  margin-top: 2px;
+  height: 6px;
   overflow: hidden;
+  position: relative;
 }
 
 .psCardProgressFill {
-  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
+  height: 100%;
 }
 
 .psCardProgressPlanned {
-  background: #6b7280;
+  background: #93a6b8;
 }
 
 .psCardProgressActual {
-  background: #2563eb;
+  background: var(--ps-accent);
 }
 
 .psCardProgressOverlay {
   mix-blend-mode: multiply;
 }
 
-/* Text sections */
-
 .psFeedSection {
-  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .psFeedSectionLabel {
-  font-size: 10px;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #9ca3af;
+  letter-spacing: 0.08em;
+  color: var(--ps-text-muted);
 }
 
 .psFeedSection p {
-  margin: 2px 0 0;
-  font-size: 12px;
-  color: #374151;
+  margin: 0;
   white-space: pre-wrap;
+  font-size: 13px;
+  color: #304354;
 }
-
-/* Footer actions */
-
-.psFeedFooter {
-  margin-top: 4px;
-  display: flex;
-  gap: 8px;
-}
-
-.psFeedAction {
-  border-radius: 999px;
-  padding: 3px 8px;
-  border: none;
-  background: transparent;
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  color: #6b7280;
-  cursor: pointer;
-  transition: background 120ms ease-out, color 120ms ease-out, transform 80ms;
-}
-
-.psFeedAction:hover {
-  background: rgba(37, 99, 235, 0.06);
-  color: #1d4ed8;
-  transform: translateY(-1px);
-}
-
-.psFeedActionIcon {
-  font-size: 14px;
-}
-
-/* === UPDATE FORM / COMPOSER === */
 
 .psUpdatePage {
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .psAlertStack {
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .psAlert {
-  border-radius: 999px;
-  padding: 6px 10px;
-  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  border: 1px solid transparent;
 }
 
 .psAlertError {
-  background: #fee2e2;
-  color: #b91c1c;
+  color: #8d2422;
+  background: #fde8e7;
+  border-color: #f2c7c6;
 }
 
 .psAlertSuccess {
-  background: #dcfce7;
-  color: #166534;
+  color: #126638;
+  background: #e5f7ec;
+  border-color: #bce6cb;
 }
-
-/* Shell for main + side panel */
 
 .psFormShell {
   display: grid;
-  grid-template-columns: minmax(0, 2.2fr) minmax(260px, 1fr);
-  gap: 14px;
-  align-items: flex-start;
+  grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);
+  gap: 12px;
 }
 
 .psFormMain,
 .psFormSide {
-  padding: 14px 16px;
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.97);
-  box-shadow:
-    0 18px 40px rgba(15, 23, 42, 0.09),
-    0 0 0 1px rgba(148, 163, 184, 0.18);
+  background: var(--ps-panel);
+  border: 1px solid var(--ps-panel-border);
+  border-radius: 14px;
+  padding: 14px;
 }
-
-/* Composer header (avatar + text) */
 
 .psComposerHeader {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .psComposerAvatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(150deg, #2ca58d 0%, #2d7db4 100%);
+  color: white;
+  font-weight: 700;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
-  font-weight: 600;
-  color: white;
 }
 
 .psComposerMeta {
@@ -596,222 +508,168 @@
 }
 
 .psComposerName {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 14px;
+  font-weight: 700;
 }
 
 .psComposerProject {
-  font-size: 11px;
-  color: #6b7280;
+  font-size: 12px;
+  color: var(--ps-text-muted);
 }
 
-/* Fields */
-
 .psField {
-  margin-top: 8px;
+  margin-top: 10px;
 }
 
 .psFieldLabel {
   display: block;
+  margin-bottom: 5px;
   font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: #9ca3af;
-  margin-bottom: 4px;
+  letter-spacing: 0.08em;
+  color: var(--ps-text-muted);
 }
 
-.psFieldRow {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+.psTextArea,
+.psSelect {
+  width: 100%;
+  border: 1px solid #c9d7e4;
+  border-radius: 10px;
+  box-sizing: border-box;
+  font-size: 13px;
+  color: var(--ps-text);
+  background: #fbfdff;
+  transition: border-color 100ms ease-out, box-shadow 100ms ease-out;
 }
-
-.psFieldValue {
-  font-size: 11px;
-  color: #4b5563;
-}
-
-/* Text area */
 
 .psTextArea {
-  width: 100%;
-  resize: vertical;
-  min-height: 72px;
-  border-radius: 14px;
-  border: 1px solid #e5e7eb;
+  min-height: 82px;
   padding: 8px 10px;
-  font-size: 12px;
+  resize: vertical;
   font-family: inherit;
-  color: #111827;
-  background: rgba(248, 250, 252, 0.9);
-  transition: border 120ms ease-out, box-shadow 120ms ease-out, background 120ms;
 }
 
-.psTextArea::placeholder {
-  color: #9ca3af;
-}
-
-.psTextArea:focus {
+.psTextArea:focus,
+.psSelect:focus {
   outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+  border-color: #66a7ce;
+  box-shadow: 0 0 0 2px rgba(21, 112, 166, 0.15);
   background: #ffffff;
 }
-
-/* Select */
 
 .psSelectWrapper {
   position: relative;
 }
 
 .psSelect {
-  width: 100%;
-  border-radius: 999px;
-  border: 1px solid #e5e7eb;
-  padding: 6px 30px 6px 10px;
-  font-size: 12px;
-  background:
-    #f9fafb
-    url("data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239ca3af' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
-    no-repeat right 10px center;
   appearance: none;
   -webkit-appearance: none;
-  -moz-appearance: none;
-  color: #111827;
+  padding: 7px 34px 7px 10px;
+  background:
+    #fbfdff
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1.2l5 4.5 5-4.5' fill='none' stroke='%235d6f82' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
 }
-
-.psSelect:focus {
-  outline: none;
-  border-color: #6366f1;
-  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
-  background-color: #ffffff;
-}
-
-/* Health pills */
 
 .psHealthPills {
-  display: flex;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 6px;
 }
 
 .psHealthPill {
-  flex: 1;
-  border-radius: 999px;
-  border: 1px solid transparent;
-  padding: 4px 8px;
-  font-size: 11px;
+  border-radius: 9px;
+  border: 1px solid #c9d7e4;
+  background: #fbfdff;
+  padding: 7px;
+  font-size: 12px;
+  cursor: pointer;
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 6px;
-  cursor: pointer;
-  background: rgba(248, 250, 252, 0.9);
-  color: #374151;
-  transition:
-    background 120ms ease-out,
-    color 120ms ease-out,
-    border 120ms ease-out,
-    transform 80ms;
-}
-
-.psHealthPill:hover {
-  transform: translateY(-1px);
 }
 
 .psHealthPillActive {
   border-color: currentColor;
-  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.05);
+  font-weight: 700;
 }
 
 .psHealthPillGreen {
-  color: #16a34a;
+  color: #19984f;
 }
 
 .psHealthPillYellow {
-  color: #b45309;
+  color: #a87410;
 }
 
 .psHealthPillRed {
-  color: #b91c1c;
+  color: #b73431;
 }
 
 .psHealthDot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 999px;
   background: currentColor;
 }
 
-/* Sliders */
-
 .psFieldGroup {
+  margin-top: 10px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: 8px;
+  gap: 8px;
+}
+
+.psFieldRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.psFieldValue {
+  font-size: 12px;
+  color: var(--ps-text-muted);
 }
 
 .psSlider {
   width: 100%;
-  cursor: pointer;
-  accent-color: #6b7280;
+  accent-color: #8093a6;
 }
 
 .psSliderAccent {
-  accent-color: #2563eb;
+  accent-color: var(--ps-accent);
 }
 
-/* CTA */
-
 .psFormActions {
-  margin-top: 10px;
+  margin-top: 12px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 6px;
 }
 
 .psPrimaryButton {
-  border-radius: 999px;
   border: none;
-  padding: 7px 16px;
+  border-radius: 10px;
+  background: linear-gradient(140deg, #1570a6 0%, #125a87 100%);
+  color: #ffffff;
   font-size: 13px;
-  font-weight: 600;
-  color: white;
-  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  font-weight: 700;
+  padding: 9px 14px;
   cursor: pointer;
-  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.5);
-  transition: transform 100ms ease-out, box-shadow 100ms ease-out, opacity 80ms;
-}
-
-.psPrimaryButton:hover:not(:disabled) {
-  transform: translateY(-1px);
-  box-shadow: 0 22px 40px rgba(37, 99, 235, 0.65);
 }
 
 .psPrimaryButton:disabled {
   opacity: 0.6;
-  cursor: default;
-  box-shadow: none;
+  cursor: not-allowed;
 }
 
 .psFormHint {
-  font-size: 11px;
-  color: #6b7280;
+  color: var(--ps-text-muted);
+  font-size: 12px;
 }
 
-/* === ANIMATIONS === */
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUpSmall {
+@keyframes fadeIn {
   from {
     opacity: 0;
     transform: translateY(4px);
@@ -822,29 +680,45 @@
   }
 }
 
-/* === RESPONSIVE === */
-
-@media (max-width: 1024px) {
+@media (max-width: 1120px) {
   .psKpiRow {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
   .psFeedGrid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
+
   .psFormShell {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-@media (max-width: 900px) {
-  .sideNav {
-    display: none;
-  }
+@media (max-width: 880px) {
   .appShell {
-    flex-direction: column;
+    grid-template-columns: minmax(0, 1fr);
   }
+
+  .sideNav {
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .sideNavFooter {
+    margin-top: 2px;
+  }
+
   .appMain {
-    padding: 16px 14px 18px;
+    padding: 16px;
+  }
+
+  .appMainHeader {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .appMainTitle {
+    font-size: 24px;
   }
 }
 
@@ -853,15 +727,11 @@
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 
-  .appMainHeader {
-    flex-direction: column;
-    align-items: flex-start;
+  .appMainTitle {
+    font-size: 22px;
   }
 }
 
-
-
-/* ---- SPFx canvas stretch ---- */
 :global {
   html,
   body {

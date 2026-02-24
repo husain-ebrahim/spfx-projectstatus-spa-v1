@@ -2,7 +2,6 @@ import * as React from 'react';
 import { ProjectStatusService } from '../services/ProjectStatusService';
 import styles from './ProjectStatus.module.scss';
 
-
 interface IUpdatePageProps {
   service: ProjectStatusService;
   projectsLookup: { id: number; title: string }[];
@@ -10,12 +9,55 @@ interface IUpdatePageProps {
   onCreated: () => void;
 }
 
-const healthPillClassMap: Record<'Green' | 'Yellow' | 'Red', string> = {
+type HealthValue = 'Green' | 'Yellow' | 'Red';
+
+interface IUpdateFormState {
+  projectId?: number;
+  health: HealthValue;
+  plannedPercent: number;
+  actualPercent: number;
+  activities: string;
+  issues: string;
+  nextSteps: string;
+}
+
+const defaultFormState: IUpdateFormState = {
+  projectId: undefined,
+  health: 'Green',
+  plannedPercent: 0,
+  actualPercent: 0,
+  activities: '',
+  issues: '',
+  nextSteps: ''
+};
+
+const healthPillClassMap: Record<HealthValue, string> = {
   Green: styles.psHealthPillGreen,
   Yellow: styles.psHealthPillYellow,
   Red: styles.psHealthPillRed
 };
 
+const narrativeFields: {
+  key: 'activities' | 'issues' | 'nextSteps';
+  label: string;
+  placeholder: string;
+}[] = [
+  {
+    key: 'activities',
+    label: 'Progress summary',
+    placeholder: 'Summarize key activities and milestones completed this period.'
+  },
+  {
+    key: 'issues',
+    label: 'Issues and risks',
+    placeholder: 'List blockers, risks, or decisions that need attention.'
+  },
+  {
+    key: 'nextSteps',
+    label: 'Next steps',
+    placeholder: 'Outline the next actions, owners, and near-term timeline.'
+  }
+];
 
 export const UpdatePage: React.FC<IUpdatePageProps> = ({
   service,
@@ -23,23 +65,23 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
   isLoadingProjects,
   onCreated
 }) => {
-  const [projectId, setProjectId] = React.useState<number | undefined>();
-  const [health, setHealth] = React.useState<'Green' | 'Yellow' | 'Red'>('Green');
-  const [plannedPercent, setPlannedPercent] = React.useState<number>(0);
-  const [actualPercent, setActualPercent] = React.useState<number>(0);
-  const [activities, setActivities] = React.useState<string>('');
-  const [issues, setIssues] = React.useState<string>('');
-  const [nextSteps, setNextSteps] = React.useState<string>('');
-
+  const [form, setForm] = React.useState<IUpdateFormState>(defaultFormState);
   const [isSaving, setIsSaving] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [success, setSuccess] = React.useState<string | undefined>();
+
+  const setField = React.useCallback(
+    <K extends keyof IUpdateFormState>(key: K, value: IUpdateFormState[K]) => {
+      setForm(prev => ({ ...prev, [key]: value }));
+    },
+    []
+  );
 
   const onSave = async () => {
     setError(undefined);
     setSuccess(undefined);
 
-    if (!projectId) {
+    if (!form.projectId) {
       setError('Please choose a project before saving.');
       return;
     }
@@ -47,43 +89,33 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
     setIsSaving(true);
     try {
       await service.createStatus({
-        projectId,
-        health,
-        plannedPercent,
-        actualPercent,
-        activities,
-        issues,
-        nextSteps
+        projectId: form.projectId,
+        health: form.health,
+        plannedPercent: form.plannedPercent,
+        actualPercent: form.actualPercent,
+        activities: form.activities,
+        issues: form.issues,
+        nextSteps: form.nextSteps
       });
 
-      setIsSaving(false);
-      setSuccess('Status update posted 🎉');
-
-      // reset form
-      setPlannedPercent(0);
-      setActualPercent(0);
-      setActivities('');
-      setIssues('');
-      setNextSteps('');
-      setProjectId(undefined);
-      setHealth('Green');
-
+      setSuccess('Status update posted successfully.');
+      setForm(defaultFormState);
       await onCreated();
     } catch (err: any) {
-      setIsSaving(false);
       setError(err.message || 'Error saving status update.');
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const selectedProject =
-    projectId && projectsLookup.find(p => p.id === projectId)?.title;
+    form.projectId && projectsLookup.find(p => p.id === form.projectId)?.title;
 
   return (
     <div className={styles.psUpdatePage}>
-      {/* “Social” style header */}
       <div className={styles.psSectionHeader}>
-        <h2>Share a status update</h2>
-        <span className={styles.psSectionTag}>New post</span>
+        <h2>Create status update</h2>
+        <span className={styles.psSectionTag}>Entry form</span>
       </div>
 
       {(error || success) && (
@@ -102,12 +134,9 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
       )}
 
       <div className={styles.psFormShell}>
-        {/* Left: main editor */}
         <div className={styles.psFormMain}>
-          {/* “composer” header showing context */}
           <div className={styles.psComposerHeader}>
             <div className={styles.psComposerAvatar}>
-              {/* fake initials circle */}
               <span>DF</span>
             </div>
             <div className={styles.psComposerMeta}>
@@ -124,57 +153,31 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
             </div>
           </div>
 
-          {/* Activities textarea */}
-          <div className={styles.psField}>
-            <label className={styles.psFieldLabel}>What’s been happening?</label>
-            <textarea
-              className={styles.psTextArea}
-              placeholder="Summarise key activities, milestones, workshops…"
-              rows={3}
-              value={activities}
-              onChange={e => setActivities(e.target.value)}
-              disabled={isSaving}
-            />
-          </div>
-
-          {/* Issues / risks */}
-          <div className={styles.psField}>
-            <label className={styles.psFieldLabel}>Any issues or risks?</label>
-            <textarea
-              className={styles.psTextArea}
-              placeholder="Highlight blockers, risks or decisions needed…"
-              rows={3}
-              value={issues}
-              onChange={e => setIssues(e.target.value)}
-              disabled={isSaving}
-            />
-          </div>
-
-          {/* Next steps */}
-          <div className={styles.psField}>
-            <label className={styles.psFieldLabel}>What’s next?</label>
-            <textarea
-              className={styles.psTextArea}
-              placeholder="Outline next actions, owners and timelines…"
-              rows={3}
-              value={nextSteps}
-              onChange={e => setNextSteps(e.target.value)}
-              disabled={isSaving}
-            />
-          </div>
+          {narrativeFields.map(field => (
+            <div key={field.key} className={styles.psField}>
+              <label className={styles.psFieldLabel}>{field.label}</label>
+              <textarea
+                className={styles.psTextArea}
+                placeholder={field.placeholder}
+                rows={3}
+                value={form[field.key]}
+                onChange={e => setField(field.key, e.target.value)}
+                disabled={isSaving}
+              />
+            </div>
+          ))}
         </div>
 
-        {/* Right: meta panel */}
         <div className={styles.psFormSide}>
-          {/* Project select */}
           <div className={styles.psField}>
             <label className={styles.psFieldLabel}>Project</label>
             <div className={styles.psSelectWrapper}>
               <select
                 className={styles.psSelect}
-                value={projectId ?? ''}
+                value={form.projectId ?? ''}
                 onChange={e =>
-                  setProjectId(
+                  setField(
+                    'projectId',
                     e.target.value ? Number(e.target.value) : undefined
                   )
                 }
@@ -192,7 +195,6 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
             </div>
           </div>
 
-          {/* Health pills */}
           <div className={styles.psField}>
             <label className={styles.psFieldLabel}>Health</label>
             <div className={styles.psHealthPills}>
@@ -201,12 +203,11 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
                   key={h}
                   type="button"
                   className={
-  health === h
-    ? `${styles.psHealthPill} ${styles.psHealthPillActive} ${healthPillClassMap[h]}`
-    : `${styles.psHealthPill} ${healthPillClassMap[h]}`
-}
-
-                  onClick={() => setHealth(h)}
+                    form.health === h
+                      ? `${styles.psHealthPill} ${styles.psHealthPillActive} ${healthPillClassMap[h]}`
+                      : `${styles.psHealthPill} ${healthPillClassMap[h]}`
+                  }
+                  onClick={() => setField('health', h)}
                   disabled={isSaving}
                 >
                   <span className={styles.psHealthDot} />
@@ -216,20 +217,19 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
             </div>
           </div>
 
-          {/* Sliders */}
           <div className={styles.psFieldGroup}>
             <div className={styles.psField}>
               <div className={styles.psFieldRow}>
                 <label className={styles.psFieldLabel}>Planned %</label>
-                <span className={styles.psFieldValue}>{plannedPercent}%</span>
+                <span className={styles.psFieldValue}>{form.plannedPercent}%</span>
               </div>
               <input
                 type="range"
                 min={0}
                 max={100}
                 step={5}
-                value={plannedPercent}
-                onChange={e => setPlannedPercent(Number(e.target.value))}
+                value={form.plannedPercent}
+                onChange={e => setField('plannedPercent', Number(e.target.value))}
                 className={styles.psSlider}
                 disabled={isSaving}
               />
@@ -238,33 +238,32 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
             <div className={styles.psField}>
               <div className={styles.psFieldRow}>
                 <label className={styles.psFieldLabel}>Actual %</label>
-                <span className={styles.psFieldValue}>{actualPercent}%</span>
+                <span className={styles.psFieldValue}>{form.actualPercent}%</span>
               </div>
               <input
                 type="range"
                 min={0}
                 max={100}
                 step={5}
-                value={actualPercent}
-                onChange={e => setActualPercent(Number(e.target.value))}
+                value={form.actualPercent}
+                onChange={e => setField('actualPercent', Number(e.target.value))}
                 className={`${styles.psSlider} ${styles.psSliderAccent}`}
                 disabled={isSaving}
               />
             </div>
           </div>
 
-          {/* CTA */}
           <div className={styles.psFormActions}>
             <button
               type="button"
               className={styles.psPrimaryButton}
               onClick={onSave}
-              disabled={isSaving || !projectId}
+              disabled={isSaving || !form.projectId}
             >
-              {isSaving ? 'Posting…' : 'Post update'}
+              {isSaving ? 'Saving…' : 'Save update'}
             </button>
             <div className={styles.psFormHint}>
-              Updates will appear instantly on the dashboard feed.
+              Updates appear on the dashboard after save.
             </div>
           </div>
         </div>

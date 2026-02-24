@@ -3,7 +3,6 @@ import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { IProjectStatusItem } from '../components/IProjectStatusItem';
 
 export class ProjectStatusService {
-  // DigitalFactory site where the lists live
   private readonly factorySiteUrl: string =
     'https://bapco365.sharepoint.com/sites/DigitalFactory';
 
@@ -13,14 +12,13 @@ export class ProjectStatusService {
 
   constructor(private context: WebPartContext) {}
 
-  /** Build base URL for a list on the DigitalFactory site */
   private listUrl(listTitle: string): string {
     return `${this.factorySiteUrl}/_api/web/lists/getByTitle('${listTitle}')`;
   }
 
   /** Get status items from "Projects Status" */
   public async getStatuses(): Promise<IProjectStatusItem[]> {
-    // NOTE: field names here are INTERNAL NAMES
+
     const url =
       `${this.listUrl(this.statusListTitle)}/items` +
       `?$select=` +
@@ -60,11 +58,11 @@ export class ProjectStatusService {
       projectId: item.Project?.Id,
       projectTitle: item.Project?.Title,
       health: item.Health,
-      plannedPercent: item.Planned_x0025_,     // from Planned%
-      actualPercent: item.Actual_x0025_,       // from Actual%
+      plannedPercent: item.Planned_x0025_,    
+      actualPercent: item.Actual_x0025_,       
       activities: item.Activities,
       issues: item.Issues,
-      nextSteps: item.Next,                    // from Next
+      nextSteps: item.Next,                    
       created: item.Created,
       createdBy: item.Author?.Title
     }));
@@ -108,22 +106,22 @@ export class ProjectStatusService {
     const url = `${this.listUrl(this.statusListTitle)}/items`;
 
     const body: any = {
-      // ⚠ Make sure this matches the ListItemEntityTypeFullName of "Projects Status"
+
       '__metadata': { 'type': 'SP.Data.Projects_x0020_StatusListItem' },
 
-      // Title – set something simple in case it's required
+   
       Title: '',
 
       // Lookup to Projects list
       ProjectId: item.projectId,
 
-      // Choice / number / text fields
+
       Health: item.health,
       Activities: item.activities,
       Issues: item.issues,
       Next: item.nextSteps,
 
-      // Planned% and Actual% internal names
+
       Planned_x0025_: item.plannedPercent,
       Actual_x0025_: item.actualPercent
     };

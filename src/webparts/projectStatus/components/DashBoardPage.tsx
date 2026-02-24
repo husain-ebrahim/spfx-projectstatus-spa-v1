@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { IProjectStatusItem } from './IProjectStatusItem';
-import { Icon, Label } from '@fluentui/react';
+import { Label } from '@fluentui/react';
 import styles from './ProjectStatus.module.scss';
 
 interface IDashboardPageProps {
@@ -34,7 +34,10 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
     new Set(items.filter(i => i.projectId).map(i => i.projectId))
   ).length;
 
-  const latestItems = items.slice(0, 8); // bit more feed-like
+  const latestItems = items.slice(0, 8);
+  const projectsWithIssues = new Set(
+    items.filter(i => i.issues && i.issues.trim().length > 0).map(i => i.projectId)
+  ).size;
   const healthRatioTotal =
     healthCounts.green + healthCounts.yellow + healthCounts.red || 1;
   const healthWidth = (count: number) =>
@@ -57,7 +60,7 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
         </div>
 
         <div className={styles.psKpiCard}>
-          <span className={styles.psKpiLabel}>Avg planned vs actual</span>
+          <span className={styles.psKpiLabel}>Delivery trend</span>
           <span className={styles.psKpiValue}>
             {plannedAvg}% / {actualAvg}%
           </span>
@@ -72,11 +75,9 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
         </div>
 
         <div className={styles.psKpiCard}>
-          <span className={styles.psKpiLabel}>Health snapshot</span>
-          <span className={styles.psKpiValue}>
-            G:{healthCounts.green} · Y:{healthCounts.yellow} · R:{healthCounts.red}
-          </span>
-          <span className={styles.psKpiHint}>Based on latest entries</span>
+          <span className={styles.psKpiLabel}>Projects with open issues</span>
+          <span className={styles.psKpiValue}>{projectsWithIssues}</span>
+          <span className={styles.psKpiHint}>Projects where risks/blockers were reported</span>
         </div>
       </div>
 
@@ -99,33 +100,27 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
         </div>
       </div>
 
-      {/* Social-style feed */}
       <div className={styles.psSection}>
         <div className={styles.psSectionHeader}>
           <h2>Latest updates</h2>
           <span className={styles.psSectionTag}>
-            {isLoading ? 'Refreshing…' : `${latestItems.length} recent posts`}
+            {isLoading ? 'Refreshing…' : `${latestItems.length} recent records`}
           </span>
         </div>
 
         {latestItems.length === 0 && (
-          <Label>No status updates yet. Use “Add update” to post the first one.</Label>
+          <Label>No status updates yet. Use “Add update” to create the first entry.</Label>
         )}
 
         <div className={styles.psFeedGrid}>
           {latestItems.map(i => (
             <article key={i.id} className={styles.psFeedCard}>
               <header className={styles.psFeedHeader}>
-                <div className={styles.psFeedAvatar}>
-                  <span>
-                    {i.projectTitle?.charAt(0) || '?'}
-                  </span>
-                </div>
                 <div className={styles.psFeedHeaderText}>
-                  <div className={styles.psFeedProject}>{i.projectTitle}</div>
+                  <div className={styles.psFeedProject}>{i.projectTitle || 'Unknown project'}</div>
                   <div className={styles.psFeedMeta}>
                     <span>{new Date(i.created).toLocaleDateString()}</span>
-                    <span className={styles.psFeedDot}>•</span>
+                    <span className={styles.psFeedDot}>|</span>
                     <span>{i.createdBy}</span>
                   </div>
                 </div>
@@ -144,7 +139,6 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
                 </div>
               </header>
 
-              {/* Progress mini-summary */}
               <div className={styles.psFeedProgressRow}>
                 <div className={styles.psFeedStat}>
                   <span className={styles.psFeedStatLabel}>Planned</span>
@@ -170,7 +164,6 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
                 />
               </div>
 
-              {/* Text sections like a post body */}
               {i.activities && (
                 <div className={styles.psFeedSection}>
                   <span className={styles.psFeedSectionLabel}>Activities</span>
@@ -187,26 +180,10 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
 
               {i.nextSteps && (
                 <div className={styles.psFeedSection}>
-                  <span className={styles.psFeedSectionLabel}>Next</span>
+                  <span className={styles.psFeedSectionLabel}>Next steps</span>
                   <p>{i.nextSteps}</p>
                 </div>
               )}
-
-              {/* Social-like footer (purely visual) */}
-              <footer className={styles.psFeedFooter}>
-                <button type="button" className={styles.psFeedAction}>
-                  <Icon iconName="Like" className={styles.psFeedActionIcon} />
-                  <span>Appreciate</span>
-                </button>
-                <button type="button" className={styles.psFeedAction}>
-                  <Icon iconName="Chat" className={styles.psFeedActionIcon} />
-                  <span>Comment</span>
-                </button>
-                <button type="button" className={styles.psFeedAction}>
-                  <Icon iconName="Share" className={styles.psFeedActionIcon} />
-                  <span>Share</span>
-                </button>
-              </footer>
             </article>
           ))}
         </div>

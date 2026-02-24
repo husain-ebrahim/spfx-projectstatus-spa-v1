@@ -3,11 +3,11 @@ export interface IProjectStatusItem {
   projectId: number;
   projectTitle: string;
   health: 'Green' | 'Yellow' | 'Red' | string;
-  plannedPercent: number;   // maps from Planned%
-  actualPercent: number;    // maps from Actual%
+  plannedPercent: number;   
+  actualPercent: number;    
   activities: string;
   issues: string;
-  nextSteps: string;        // maps from Next
+  nextSteps: string;        
   created: string;
   createdBy: string;
 }

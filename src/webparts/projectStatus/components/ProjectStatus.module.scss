@@ -1,0 +1,885 @@
+/* === APP LAYOUT – FULL WIDTH, MODERN BG === */
+
+.appRoot {
+  width: 100%;
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 0;
+  background:
+    radial-gradient(circle at top left, #e0f2fe 0, transparent 45%),
+    radial-gradient(circle at bottom right, #fee2e2 0, transparent 45%),
+    linear-gradient(135deg, #f4f4f5 0%, #e5e7eb 40%, #ffffff 100%);
+}
+
+.appShell {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* SIDE NAVIGATION */
+
+.sideNav {
+  width: 250px;
+  padding: 20px 18px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: radial-gradient(circle at top left, #111827 0, #020617 50%);
+  color: #e5e7eb;
+  box-shadow: 4px 0 24px rgba(15, 23, 42, 0.4);
+}
+
+.sideNavHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.sideNavBrandMark {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: conic-gradient(from 140deg, #38bdf8, #6366f1, #f97316, #38bdf8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
+}
+
+.sideNavBrandText {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sideNavBrandTitle {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sideNavBrandSubtitle {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.sideNavNav {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sideNavItem {
+  border: none;
+  outline: none;
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 999px;
+  background: transparent;
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  cursor: pointer;
+  transition:
+    background 120ms ease-out,
+    color 120ms ease-out,
+    transform 80ms ease-out,
+    box-shadow 120ms ease-out;
+}
+
+.sideNavItem:hover {
+  background: rgba(148, 163, 184, 0.26);
+  transform: translateY(-1px);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.6);
+}
+
+.sideNavItemActive {
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  color: white;
+  box-shadow: 0 18px 32px rgba(37, 99, 235, 0.7);
+}
+
+.sideNavItemIcon {
+  font-size: 16px;
+}
+
+.sideNavItemLabel {
+  flex: 1;
+  text-align: left;
+}
+
+.sideNavFooter {
+  margin-top: auto;
+  padding-top: 10px;
+  border-top: 1px solid rgba(148, 163, 184, 0.4);
+  font-size: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  color: #9ca3af;
+}
+
+.sideNavEnvLabel {
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10px;
+}
+
+.sideNavEnvValue {
+  font-weight: 500;
+}
+
+/* MAIN AREA */
+
+.appMain {
+  flex: 1;
+  padding: 20px 24px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  animation: fadeInUp 380ms ease-out;
+}
+
+.appMainHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.appMainTitle {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+  color: #111827;
+}
+
+.appMainSubtitle {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: #4b5563;
+}
+
+.appMainToolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.appMainMeta {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+.appMainContent {
+  margin-top: 8px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.appMainLoading {
+  margin-top: 32px;
+}
+
+/* ALERT WRAPPER */
+
+.psMessageBar {
+  margin-bottom: 8px;
+}
+
+/* === DASHBOARD === */
+
+.psDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* KPI row */
+
+.psKpiRow {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.psKpiCard {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(6px);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.1),
+    0 0 0 1px rgba(148, 163, 184, 0.25);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: transform 120ms ease-out, box-shadow 120ms ease-out;
+}
+
+.psKpiCard:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 24px 52px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(148, 163, 184, 0.28);
+}
+
+.psKpiLabel {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #6b7280;
+}
+
+.psKpiValue {
+  font-size: 24px;
+  font-weight: 650;
+}
+
+.psKpiHint {
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.psKpiDeltaPositive {
+  font-size: 11px;
+  color: #15803d;
+}
+
+.psKpiDeltaNegative {
+  font-size: 11px;
+  color: #b91c1c;
+}
+
+/* Health strip */
+
+.psHealthStrip {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.1),
+    0 0 0 1px rgba(148, 163, 184, 0.22);
+}
+
+.psHealthStripBar {
+  height: 10px;
+  border-radius: 999px;
+  overflow: hidden;
+  display: flex;
+  margin-top: 8px;
+  background: #e5e7eb;
+}
+
+.psHealthSegment {
+  height: 100%;
+  transition: width 260ms ease-out;
+}
+
+.psHealthGreen {
+  background: #16a34a;
+}
+
+.psHealthYellow {
+  background: #facc15;
+}
+
+.psHealthRed {
+  background: #dc2626;
+}
+
+/* Sections / headers */
+
+.psSection {
+  margin-top: 4px;
+}
+
+.psSectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.psSectionHeader h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.psSectionTag {
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  background: rgba(15, 23, 42, 0.04);
+  color: #4b5563;
+}
+
+/* Social feed grid */
+
+.psFeedGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.psFeedCard {
+  padding: 14px 14px 10px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.09),
+    0 0 0 1px rgba(148, 163, 184, 0.18);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  animation: fadeInUpSmall 260ms ease-out;
+}
+
+.psFeedHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.psFeedAvatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.psFeedHeaderText {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.psFeedProject {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.psFeedMeta {
+  font-size: 11px;
+  color: #6b7280;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.psFeedDot {
+  font-size: 10px;
+}
+
+/* Existing health badges reused */
+
+.psHealthBadge {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.psHealthGreenBadge {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.psHealthYellowBadge {
+  background: #fef9c3;
+  color: #854d0e;
+}
+
+.psHealthRedBadge {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+/* Progress */
+
+.psFeedProgressRow {
+  display: flex;
+  justify-content: flex-start;
+  gap: 14px;
+  margin-top: 4px;
+}
+
+.psFeedStat {
+  display: flex;
+  flex-direction: column;
+}
+
+.psFeedStatLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9ca3af;
+}
+
+.psFeedStatValue {
+  font-size: 13px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.psCardProgressBar {
+  position: relative;
+  height: 6px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  margin-top: 2px;
+  overflow: hidden;
+}
+
+.psCardProgressFill {
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.psCardProgressPlanned {
+  background: #6b7280;
+}
+
+.psCardProgressActual {
+  background: #2563eb;
+}
+
+.psCardProgressOverlay {
+  mix-blend-mode: multiply;
+}
+
+/* Text sections */
+
+.psFeedSection {
+  margin-top: 4px;
+}
+
+.psFeedSectionLabel {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9ca3af;
+}
+
+.psFeedSection p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #374151;
+  white-space: pre-wrap;
+}
+
+/* Footer actions */
+
+.psFeedFooter {
+  margin-top: 4px;
+  display: flex;
+  gap: 8px;
+}
+
+.psFeedAction {
+  border-radius: 999px;
+  padding: 3px 8px;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: background 120ms ease-out, color 120ms ease-out, transform 80ms;
+}
+
+.psFeedAction:hover {
+  background: rgba(37, 99, 235, 0.06);
+  color: #1d4ed8;
+  transform: translateY(-1px);
+}
+
+.psFeedActionIcon {
+  font-size: 14px;
+}
+
+/* === UPDATE FORM / COMPOSER === */
+
+.psUpdatePage {
+  margin-top: 8px;
+}
+
+.psAlertStack {
+  margin-bottom: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.psAlert {
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 12px;
+}
+
+.psAlertError {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.psAlertSuccess {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Shell for main + side panel */
+
+.psFormShell {
+  display: grid;
+  grid-template-columns: minmax(0, 2.2fr) minmax(260px, 1fr);
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.psFormMain,
+.psFormSide {
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow:
+    0 18px 40px rgba(15, 23, 42, 0.09),
+    0 0 0 1px rgba(148, 163, 184, 0.18);
+}
+
+/* Composer header (avatar + text) */
+
+.psComposerHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.psComposerAvatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: white;
+}
+
+.psComposerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.psComposerName {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.psComposerProject {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* Fields */
+
+.psField {
+  margin-top: 8px;
+}
+
+.psFieldLabel {
+  display: block;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #9ca3af;
+  margin-bottom: 4px;
+}
+
+.psFieldRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.psFieldValue {
+  font-size: 11px;
+  color: #4b5563;
+}
+
+/* Text area */
+
+.psTextArea {
+  width: 100%;
+  resize: vertical;
+  min-height: 72px;
+  border-radius: 14px;
+  border: 1px solid #e5e7eb;
+  padding: 8px 10px;
+  font-size: 12px;
+  font-family: inherit;
+  color: #111827;
+  background: rgba(248, 250, 252, 0.9);
+  transition: border 120ms ease-out, box-shadow 120ms ease-out, background 120ms;
+}
+
+.psTextArea::placeholder {
+  color: #9ca3af;
+}
+
+.psTextArea:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+  background: #ffffff;
+}
+
+/* Select */
+
+.psSelectWrapper {
+  position: relative;
+}
+
+.psSelect {
+  width: 100%;
+  border-radius: 999px;
+  border: 1px solid #e5e7eb;
+  padding: 6px 30px 6px 10px;
+  font-size: 12px;
+  background:
+    #f9fafb
+    url("data:image/svg+xml,%3Csvg width='10' height='6' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%239ca3af' stroke-width='1.4' fill='none' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat right 10px center;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  color: #111827;
+}
+
+.psSelect:focus {
+  outline: none;
+  border-color: #6366f1;
+  box-shadow: 0 0 0 1px rgba(99, 102, 241, 0.35);
+  background-color: #ffffff;
+}
+
+/* Health pills */
+
+.psHealthPills {
+  display: flex;
+  gap: 6px;
+}
+
+.psHealthPill {
+  flex: 1;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  padding: 4px 8px;
+  font-size: 11px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  background: rgba(248, 250, 252, 0.9);
+  color: #374151;
+  transition:
+    background 120ms ease-out,
+    color 120ms ease-out,
+    border 120ms ease-out,
+    transform 80ms;
+}
+
+.psHealthPill:hover {
+  transform: translateY(-1px);
+}
+
+.psHealthPillActive {
+  border-color: currentColor;
+  box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.05);
+}
+
+.psHealthPillGreen {
+  color: #16a34a;
+}
+
+.psHealthPillYellow {
+  color: #b45309;
+}
+
+.psHealthPillRed {
+  color: #b91c1c;
+}
+
+.psHealthDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+/* Sliders */
+
+.psFieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.psSlider {
+  width: 100%;
+  cursor: pointer;
+  accent-color: #6b7280;
+}
+
+.psSliderAccent {
+  accent-color: #2563eb;
+}
+
+/* CTA */
+
+.psFormActions {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.psPrimaryButton {
+  border-radius: 999px;
+  border: none;
+  padding: 7px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(135deg, #38bdf8, #6366f1);
+  cursor: pointer;
+  box-shadow: 0 16px 32px rgba(37, 99, 235, 0.5);
+  transition: transform 100ms ease-out, box-shadow 100ms ease-out, opacity 80ms;
+}
+
+.psPrimaryButton:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 22px 40px rgba(37, 99, 235, 0.65);
+}
+
+.psPrimaryButton:disabled {
+  opacity: 0.6;
+  cursor: default;
+  box-shadow: none;
+}
+
+.psFormHint {
+  font-size: 11px;
+  color: #6b7280;
+}
+
+/* === ANIMATIONS === */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInUpSmall {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* === RESPONSIVE === */
+
+@media (max-width: 1024px) {
+  .psKpiRow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .psFeedGrid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+  .psFormShell {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .sideNav {
+    display: none;
+  }
+  .appShell {
+    flex-direction: column;
+  }
+  .appMain {
+    padding: 16px 14px 18px;
+  }
+}
+
+@media (max-width: 640px) {
+  .psKpiRow {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .appMainHeader {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+
+
+/* ---- SPFx canvas stretch ---- */
+:global {
+  html,
+  body {
+    height: 100%;
+    margin: 0;
+  }
+
+  #workbenchPageContent,
+  .SPPageChrome,
+  .CanvasZone,
+  .ControlZone,
+  .ControlZone--control,
+  .CanvasSection {
+    height: 100%;
+    max-width: 100% !important;
+  }
+
+  .CanvasZone {
+    padding: 0 !important;
+  }
+}

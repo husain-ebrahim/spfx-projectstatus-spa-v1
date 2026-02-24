@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "useGulp": false,
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "22.17.1",
+    "sdksVersions": {},
+    "version": "1.22.2",
+    "libraryName": "spfx-projectstatus-spa-v-1",
+    "libraryId": "5f763eab-3ea6-4a52-8efb-905cd9bb03e3",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "spfx-projectstatus-spa-v-1",
+    "solutionShortDescription": "spfx-projectstatus-spa-v-1 description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

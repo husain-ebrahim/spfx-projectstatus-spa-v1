@@ -384,6 +384,65 @@
   gap: 12px;
 }
 
+.psProjectCardButton {
+  border: none;
+  padding: 0;
+  margin: 0;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.psProjectCardButton:focus {
+  outline: none;
+}
+
+.psProjectCardButton:focus .psFeedCard {
+  box-shadow: 0 0 0 2px rgba(28, 110, 228, 0.22);
+}
+
+.psModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(7, 17, 76, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  z-index: 1000;
+}
+
+.psModal {
+  width: min(920px, 100%);
+  max-height: 85vh;
+  overflow: auto;
+  background: #ffffff;
+  border-radius: 12px;
+  border: 1px solid var(--ps-panel-border);
+  box-shadow: 0 24px 48px rgba(7, 17, 76, 0.25);
+  padding: 14px;
+}
+
+.psModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.psModalHeader h3 {
+  margin: 0;
+  font-size: 18px;
+  color: var(--ps-text);
+}
+
+.psModalContent {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
 .psFeedCard {
   background: var(--ps-panel);
   border: 1px solid var(--ps-panel-border);
@@ -965,6 +1024,10 @@
   }
 
   .psProjectsGrid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .psModalContent {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 

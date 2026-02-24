@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ProjectStatusService } from '../services/ProjectStatusService';
 import styles from './ProjectStatus.module.scss';
+import { IProjectStatusItem } from './IProjectStatusItem';
 
 interface IUpdatePageProps {
   service: ProjectStatusService;
@@ -67,6 +68,9 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
 }) => {
   const [form, setForm] = React.useState<IUpdateFormState>(defaultFormState);
   const [isSaving, setIsSaving] = React.useState<boolean>(false);
+  const [isLoadingPrevious, setIsLoadingPrevious] = React.useState<boolean>(false);
+  const [copyPreviousData, setCopyPreviousData] = React.useState<boolean>(false);
+  const [previousEntry, setPreviousEntry] = React.useState<IProjectStatusItem | undefined>();
   const [error, setError] = React.useState<string | undefined>();
   const [success, setSuccess] = React.useState<string | undefined>();
 
@@ -116,6 +120,8 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
   const onProjectSelect = (projectId: number) => {
     setError(undefined);
     setSuccess(undefined);
+    setCopyPreviousData(false);
+    setPreviousEntry(undefined);
     setForm(prev => ({
       ...defaultFormState,
       projectId,
@@ -126,8 +132,57 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
   const onChangeProject = () => {
     setError(undefined);
     setSuccess(undefined);
+    setCopyPreviousData(false);
+    setPreviousEntry(undefined);
     setForm(prev => ({
       ...defaultFormState,
+      health: prev.health
+    }));
+  };
+
+  React.useEffect(() => {
+    const loadPreviousEntry = async () => {
+      if (!selectedProjectId) {
+        return;
+      }
+
+      setIsLoadingPrevious(true);
+      try {
+        const previous = await service.getLatestStatusByProject(selectedProjectId);
+        setPreviousEntry(previous);
+      } catch (err: any) {
+        setError(err.message || 'Error loading previous status entry.');
+      } finally {
+        setIsLoadingPrevious(false);
+      }
+    };
+
+    void loadPreviousEntry();
+  }, [selectedProjectId, service]);
+
+  const onToggleCopyPreviousData = (checked: boolean) => {
+    setCopyPreviousData(checked);
+
+    if (!form.projectId) {
+      return;
+    }
+
+    if (checked && previousEntry) {
+      setForm(prev => ({
+        ...prev,
+        health: (previousEntry.health as HealthValue) || 'Green',
+        plannedPercent: previousEntry.plannedPercent ?? 0,
+        actualPercent: previousEntry.actualPercent ?? 0,
+        activities: previousEntry.activities || '',
+        issues: previousEntry.issues || '',
+        nextSteps: previousEntry.nextSteps || ''
+      }));
+      return;
+    }
+
+    setForm(prev => ({
+      ...defaultFormState,
+      projectId: prev.projectId,
       health: prev.health
     }));
   };
@@ -214,6 +269,80 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
                 Change project
               </button>
             </div>
+
+            {isLoadingPrevious && (
+              <div className={styles.psInfoBanner}>Loading previous entry…</div>
+            )}
+
+            {!isLoadingPrevious && (
+              <>
+                {previousEntry ? (
+                  <>
+                    <label className={styles.psToggleRow}>
+                      <input
+                        type="checkbox"
+                        checked={copyPreviousData}
+                        onChange={e => onToggleCopyPreviousData(e.target.checked)}
+                        disabled={isSaving}
+                      />
+                      <span>Copy data from latest entry</span>
+                    </label>
+
+                    <div className={styles.psCompareGrid}>
+                      <div className={styles.psCompareCard}>
+                        <h4>Previous entry</h4>
+                        <div className={styles.psCompareMeta}>
+                          {new Date(previousEntry.created).toLocaleDateString()} by{' '}
+                          {previousEntry.createdBy}
+                        </div>
+                        <p>
+                          <strong>Health:</strong> {previousEntry.health}
+                        </p>
+                        <p>
+                          <strong>Planned / Actual:</strong> {previousEntry.plannedPercent ?? 0}% /{' '}
+                          {previousEntry.actualPercent ?? 0}%
+                        </p>
+                        <p>
+                          <strong>Activities:</strong> {previousEntry.activities || 'N/A'}
+                        </p>
+                        <p>
+                          <strong>Issues:</strong> {previousEntry.issues || 'N/A'}
+                        </p>
+                        <p>
+                          <strong>Next steps:</strong> {previousEntry.nextSteps || 'N/A'}
+                        </p>
+                      </div>
+
+                      <div className={styles.psCompareCard}>
+                        <h4>New entry</h4>
+                        <div className={styles.psCompareMeta}>
+                          Current draft values you are about to submit.
+                        </div>
+                        <p>
+                          <strong>Health:</strong> {form.health}
+                        </p>
+                        <p>
+                          <strong>Planned / Actual:</strong> {form.plannedPercent}% / {form.actualPercent}%
+                        </p>
+                        <p>
+                          <strong>Activities:</strong> {form.activities || 'N/A'}
+                        </p>
+                        <p>
+                          <strong>Issues:</strong> {form.issues || 'N/A'}
+                        </p>
+                        <p>
+                          <strong>Next steps:</strong> {form.nextSteps || 'N/A'}
+                        </p>
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div className={styles.psInfoBanner}>
+                    No previous updates found for this project. Start a fresh status entry.
+                  </div>
+                )}
+              </>
+            )}
 
             {narrativeFields.map(field => (
               <div key={field.key} className={styles.psField}>

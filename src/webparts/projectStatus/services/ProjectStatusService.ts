@@ -144,19 +144,48 @@ export class ProjectStatusService {
 
     const json = await response.json();
 
-    return (json.value || []).map((item: any): IProjectStatusItem => ({
-      id: item.Id,
-      projectId: item.Project?.Id,
-      projectTitle: item.Project?.Title,
-      health: item.Health,
-      plannedPercent: item.Planned_x0025_,    
-      actualPercent: item.Actual_x0025_,       
-      activities: item.Activities,
-      issues: item.Issues,
-      nextSteps: item.Next,                    
-      created: item.Created,
-      createdBy: item.Author?.Title
-    }));
+    return (json.value || []).map(this.mapStatusItem);
+  }
+
+  /** Get latest status entry for one project */
+  public async getLatestStatusByProject(projectId: number): Promise<IProjectStatusItem | undefined> {
+    const url =
+      `${this.listUrl(this.statusListTitle)}/items` +
+      `?$select=` +
+      [
+        'Id',
+        'Title',
+        'Project/Id',
+        'Project/Title',
+        'Health',
+        'Activities',
+        'Issues',
+        'Next',
+        'Planned_x0025_',
+        'Actual_x0025_',
+        'Created',
+        'Author/Title'
+      ].join(',') +
+      `&$expand=Project,Author` +
+      `&$filter=ProjectId eq ${projectId}` +
+      `&$orderby=Created desc` +
+      `&$top=1`;
+
+    const response: SPHttpClientResponse = await this.context.spHttpClient.get(
+      url,
+      SPHttpClient.configurations.v1
+    );
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `Error getting latest status for project ${projectId}: ${response.status} ${response.statusText} - ${text}`
+      );
+    }
+
+    const json = await response.json();
+    const latest = json.value?.[0];
+    return latest ? this.mapStatusItem(latest) : undefined;
   }
 
   /** Get lookup projects from "Projects" */
@@ -298,4 +327,18 @@ export class ProjectStatusService {
       );
     }
   }
+
+  private mapStatusItem = (item: any): IProjectStatusItem => ({
+    id: item.Id,
+    projectId: item.Project?.Id,
+    projectTitle: item.Project?.Title,
+    health: item.Health,
+    plannedPercent: item.Planned_x0025_,
+    actualPercent: item.Actual_x0025_,
+    activities: item.Activities,
+    issues: item.Issues,
+    nextSteps: item.Next,
+    created: item.Created,
+    createdBy: item.Author?.Title
+  });
 }

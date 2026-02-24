@@ -56,6 +56,8 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({
   const avgProjectsPerPm =
     pmCount > 0 ? (totalPmProjects / pmCount).toFixed(1) : '0.0';
   const maxAllocation = projectManagerAllocations[0];
+  const topAllocations = projectManagerAllocations.slice(0, 5);
+  const topAllocationCount = topAllocations[0]?.projectCount || 1;
 
   return (
     <div className={styles.psDashboard}>
@@ -99,10 +101,35 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({
           <span className={styles.psKpiValue}>{avgProjectsPerPm}</span>
           <span className={styles.psKpiHint}>
             Avg projects per PM across {pmCount} PMs
-            {maxAllocation
-              ? ` · Max ${maxAllocation.projectCount} (${maxAllocation.managerName})`
-              : ''}
           </span>
+          <div className={styles.psAllocationChart}>
+            {topAllocations.length > 0 ? (
+              topAllocations.map(pm => (
+                <div key={pm.managerName} className={styles.psAllocationRow}>
+                  <span className={styles.psAllocationName}>{pm.managerName}</span>
+                  <div className={styles.psAllocationBarTrack}>
+                    <div
+                      className={styles.psAllocationBarFill}
+                      style={{
+                        width: `${Math.max(
+                          8,
+                          Math.round((pm.projectCount / topAllocationCount) * 100)
+                        )}%`
+                      }}
+                    />
+                  </div>
+                  <span className={styles.psAllocationCount}>{pm.projectCount}</span>
+                </div>
+              ))
+            ) : (
+              <span className={styles.psAllocationEmpty}>No PM allocation data</span>
+            )}
+          </div>
+          {maxAllocation && (
+            <span className={styles.psKpiHint}>
+              Highest allocation: {maxAllocation.managerName} ({maxAllocation.projectCount})
+            </span>
+          )}
         </div>
       </div>
 

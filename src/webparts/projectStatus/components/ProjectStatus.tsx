@@ -158,7 +158,11 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
             ) : (
               <>
                 {currentPage === 'dashboard' && (
-                  <DashboardPage items={items} isLoading={isLoading} />
+                  <DashboardPage
+                    items={items}
+                    isLoading={isLoading}
+                    managerAllocationCount={projectsLookup.length}
+                  />
                 )}
 
                 {currentPage === 'addUpdate' && (

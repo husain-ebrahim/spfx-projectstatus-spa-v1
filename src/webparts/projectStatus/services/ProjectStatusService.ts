@@ -9,11 +9,72 @@ export class ProjectStatusService {
   // List titles
   private readonly statusListTitle: string = 'Projects Status';
   private readonly projectsListTitle: string = 'Projects';
+  private readonly projectManagerFieldTitle: string = 'Project Manager';
+  private projectManagerInternalName?: string;
 
   constructor(private context: WebPartContext) {}
 
   private listUrl(listTitle: string): string {
     return `${this.factorySiteUrl}/_api/web/lists/getByTitle('${listTitle}')`;
+  }
+
+  /** Get currently logged in user's SharePoint ID */
+  private async getCurrentUserId(): Promise<number> {
+    const pageUserId = Number(this.context.pageContext.legacyPageContext?.userId);
+    if (!isNaN(pageUserId) && pageUserId > 0) {
+      return pageUserId;
+    }
+
+    const url = `${this.factorySiteUrl}/_api/web/currentuser?$select=Id`;
+    const response: SPHttpClientResponse = await this.context.spHttpClient.get(
+      url,
+      SPHttpClient.configurations.v1
+    );
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `Error getting current user ID: ${response.status} ${response.statusText} - ${text}`
+      );
+    }
+
+    const json = await response.json();
+    return json.Id;
+  }
+
+  /** Resolve and cache internal name of the "Project Manager" field */
+  private async getProjectManagerInternalName(): Promise<string> {
+    if (this.projectManagerInternalName) {
+      return this.projectManagerInternalName;
+    }
+
+    const url =
+      `${this.listUrl(this.projectsListTitle)}/fields` +
+      `?$select=Title,InternalName&$filter=Title eq '${this.projectManagerFieldTitle}'`;
+
+    const response: SPHttpClientResponse = await this.context.spHttpClient.get(
+      url,
+      SPHttpClient.configurations.v1
+    );
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `Error resolving Project Manager field internal name: ${response.status} ${response.statusText} - ${text}`
+      );
+    }
+
+    const json = await response.json();
+    const internalName = json.value?.[0]?.InternalName;
+
+    if (!internalName) {
+      throw new Error(
+        `Could not find a "${this.projectManagerFieldTitle}" field in list "${this.projectsListTitle}".`
+      );
+    }
+
+    this.projectManagerInternalName = internalName;
+    return internalName;
   }
 
   /** Get status items from "Projects Status" */
@@ -70,9 +131,17 @@ export class ProjectStatusService {
 
   /** Get lookup projects from "Projects" */
   public async getProjectsLookup(): Promise<{ id: number; title: string }[]> {
+    const [currentUserId, projectManagerFieldInternalName] = await Promise.all([
+      this.getCurrentUserId(),
+      this.getProjectManagerInternalName()
+    ]);
+
     const url =
       `${this.listUrl(this.projectsListTitle)}/items` +
-      `?$select=Id,Title&$orderby=Title`;
+      `?$select=Id,Title,${projectManagerFieldInternalName}/Id` +
+      `&$expand=${projectManagerFieldInternalName}` +
+      `&$filter=${projectManagerFieldInternalName}/Id eq ${currentUserId}` +
+      `&$orderby=Title`;
 
     const response: SPHttpClientResponse = await this.context.spHttpClient.get(
       url,

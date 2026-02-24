@@ -6,9 +6,14 @@ import styles from './ProjectStatus.module.scss';
 interface IDashboardPageProps {
   items: IProjectStatusItem[];
   isLoading: boolean;
+  managerAllocationCount: number;
 }
 
-export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading }) => {
+export const DashboardPage: React.FC<IDashboardPageProps> = ({
+  items,
+  isLoading,
+  managerAllocationCount
+}) => {
   const totalUpdates = items.length;
 
   const healthCounts = items.reduce(
@@ -78,6 +83,12 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({ items, isLoading 
           <span className={styles.psKpiLabel}>Projects with open issues</span>
           <span className={styles.psKpiValue}>{projectsWithIssues}</span>
           <span className={styles.psKpiHint}>Projects where risks/blockers were reported</span>
+        </div>
+
+        <div className={styles.psKpiCard}>
+          <span className={styles.psKpiLabel}>Resource allocation (PM)</span>
+          <span className={styles.psKpiValue}>{managerAllocationCount}</span>
+          <span className={styles.psKpiHint}>Projects assigned to you as Project Manager</span>
         </div>
       </div>
 

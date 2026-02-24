@@ -2,7 +2,10 @@ import * as React from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { IProjectStatusProps } from './IProjectStatusProps';
 import { PageKey } from './IProjectStatusState';
-import { ProjectStatusService } from '../services/ProjectStatusService';
+import {
+  IProjectManagerAllocation,
+  ProjectStatusService
+} from '../services/ProjectStatusService';
 import { IProjectStatusItem } from './IProjectStatusItem';
 
 import {
@@ -29,6 +32,9 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
 
   const [items, setItems] = useState<IProjectStatusItem[]>([]);
   const [projectsLookup, setProjectsLookup] = useState<IProjectLookup[]>([]);
+  const [projectManagerAllocations, setProjectManagerAllocations] = useState<
+    IProjectManagerAllocation[]
+  >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
   const [error, setError] = useState<string>();
@@ -39,13 +45,15 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
     try {
       setIsLoading(true);
       setError(undefined);
-      const [statuses, projects] = await Promise.all([
+      const [statuses, projects, pmAllocations] = await Promise.all([
         service.getStatuses(),
-        service.getProjectsLookup()
+        service.getProjectsLookup(),
+        service.getProjectManagerAllocations()
       ]);
 
       setItems(statuses);
       setProjectsLookup(projects);
+      setProjectManagerAllocations(pmAllocations);
       setLastRefresh(new Date());
     } catch (err: any) {
       setError(err.message || 'Error loading data');
@@ -161,7 +169,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
                   <DashboardPage
                     items={items}
                     isLoading={isLoading}
-                    managerAllocationCount={projectsLookup.length}
+                    projectManagerAllocations={projectManagerAllocations}
                   />
                 )}
 

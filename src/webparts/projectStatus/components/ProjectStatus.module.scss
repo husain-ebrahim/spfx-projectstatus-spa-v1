@@ -442,6 +442,71 @@
   margin-top: 4px;
 }
 
+.psProjectPicker {
+  background: var(--ps-panel);
+  border: 1px solid var(--ps-panel-border);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.psProjectPickerHeader h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.psProjectPickerHeader p {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--ps-text-muted);
+}
+
+.psProjectPickerEmpty {
+  margin-top: 12px;
+  border: 1px dashed #c9d7e4;
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 13px;
+  color: var(--ps-text-muted);
+  background: #fbfdff;
+}
+
+.psProjectList {
+  margin-top: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 10px;
+}
+
+.psProjectListItem {
+  border: 1px solid #c9d7e4;
+  border-radius: 10px;
+  background: #fbfdff;
+  padding: 11px 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  transition: border-color 120ms ease-out, box-shadow 120ms ease-out;
+}
+
+.psProjectListItem:hover {
+  border-color: #66a7ce;
+  box-shadow: 0 0 0 2px rgba(21, 112, 166, 0.15);
+}
+
+.psProjectListTitle {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ps-text);
+  text-align: left;
+}
+
+.psProjectListAction {
+  color: var(--ps-brand);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .psAlertStack {
   margin-bottom: 10px;
   display: flex;
@@ -487,6 +552,7 @@
   align-items: center;
   gap: 10px;
   margin-bottom: 10px;
+  flex-wrap: wrap;
 }
 
 .psComposerAvatar {
@@ -667,6 +733,23 @@
 .psFormHint {
   color: var(--ps-text-muted);
   font-size: 12px;
+}
+
+.psSecondaryButton {
+  margin-left: auto;
+  border: 1px solid #c9d7e4;
+  border-radius: 10px;
+  background: #ffffff;
+  color: var(--ps-brand);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 7px 10px;
+  cursor: pointer;
+}
+
+.psSecondaryButton:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 @keyframes fadeIn {

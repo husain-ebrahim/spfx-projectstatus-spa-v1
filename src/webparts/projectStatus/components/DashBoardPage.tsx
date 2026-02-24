@@ -2,17 +2,18 @@ import * as React from 'react';
 import { IProjectStatusItem } from './IProjectStatusItem';
 import { Label } from '@fluentui/react';
 import styles from './ProjectStatus.module.scss';
+import { IProjectManagerAllocation } from '../services/ProjectStatusService';
 
 interface IDashboardPageProps {
   items: IProjectStatusItem[];
   isLoading: boolean;
-  managerAllocationCount: number;
+  projectManagerAllocations: IProjectManagerAllocation[];
 }
 
 export const DashboardPage: React.FC<IDashboardPageProps> = ({
   items,
   isLoading,
-  managerAllocationCount
+  projectManagerAllocations
 }) => {
   const totalUpdates = items.length;
 
@@ -47,6 +48,14 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({
     healthCounts.green + healthCounts.yellow + healthCounts.red || 1;
   const healthWidth = (count: number) =>
     `${Math.round((count / healthRatioTotal) * 100)}%`;
+  const pmCount = projectManagerAllocations.length;
+  const totalPmProjects = projectManagerAllocations.reduce(
+    (sum, pm) => sum + pm.projectCount,
+    0
+  );
+  const avgProjectsPerPm =
+    pmCount > 0 ? (totalPmProjects / pmCount).toFixed(1) : '0.0';
+  const maxAllocation = projectManagerAllocations[0];
 
   return (
     <div className={styles.psDashboard}>
@@ -87,8 +96,13 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({
 
         <div className={styles.psKpiCard}>
           <span className={styles.psKpiLabel}>Resource allocation (PM)</span>
-          <span className={styles.psKpiValue}>{managerAllocationCount}</span>
-          <span className={styles.psKpiHint}>Projects assigned to you as Project Manager</span>
+          <span className={styles.psKpiValue}>{avgProjectsPerPm}</span>
+          <span className={styles.psKpiHint}>
+            Avg projects per PM across {pmCount} PMs
+            {maxAllocation
+              ? ` · Max ${maxAllocation.projectCount} (${maxAllocation.managerName})`
+              : ''}
+          </span>
         </div>
       </div>
 

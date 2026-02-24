@@ -110,12 +110,35 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
 
   const selectedProject =
     form.projectId && projectsLookup.find(p => p.id === form.projectId)?.title;
+  const selectedProjectId = form.projectId;
+  const canShowForm = !!selectedProjectId;
+
+  const onProjectSelect = (projectId: number) => {
+    setError(undefined);
+    setSuccess(undefined);
+    setForm(prev => ({
+      ...defaultFormState,
+      projectId,
+      health: prev.health
+    }));
+  };
+
+  const onChangeProject = () => {
+    setError(undefined);
+    setSuccess(undefined);
+    setForm(prev => ({
+      ...defaultFormState,
+      health: prev.health
+    }));
+  };
 
   return (
     <div className={styles.psUpdatePage}>
       <div className={styles.psSectionHeader}>
         <h2>Create status update</h2>
-        <span className={styles.psSectionTag}>Entry form</span>
+        <span className={styles.psSectionTag}>
+          {canShowForm ? 'Step 2 of 2' : 'Step 1 of 2'}
+        </span>
       </div>
 
       {(error || success) && (
@@ -133,141 +156,155 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
         </div>
       )}
 
-      <div className={styles.psFormShell}>
-        <div className={styles.psFormMain}>
-          <div className={styles.psComposerHeader}>
-            <div className={styles.psComposerAvatar}>
-              <span>DF</span>
-            </div>
-            <div className={styles.psComposerMeta}>
-              <span className={styles.psComposerName}>
-                Project status update
-              </span>
-              <span className={styles.psComposerProject}>
-                {selectedProject
-                  ? selectedProject
-                  : isLoadingProjects
-                  ? 'Loading projects…'
-                  : 'No project selected yet'}
-              </span>
-            </div>
+      {!canShowForm ? (
+        <div className={styles.psProjectPicker}>
+          <div className={styles.psProjectPickerHeader}>
+            <h3>Select a project</h3>
+            <p>Choose one of your assigned projects to continue.</p>
           </div>
 
-          {narrativeFields.map(field => (
-            <div key={field.key} className={styles.psField}>
-              <label className={styles.psFieldLabel}>{field.label}</label>
-              <textarea
-                className={styles.psTextArea}
-                placeholder={field.placeholder}
-                rows={3}
-                value={form[field.key]}
-                onChange={e => setField(field.key, e.target.value)}
-                disabled={isSaving}
-              />
-            </div>
-          ))}
-        </div>
+          {isLoadingProjects && (
+            <div className={styles.psProjectPickerEmpty}>Loading projects…</div>
+          )}
 
-        <div className={styles.psFormSide}>
-          <div className={styles.psField}>
-            <label className={styles.psFieldLabel}>Project</label>
-            <div className={styles.psSelectWrapper}>
-              <select
-                className={styles.psSelect}
-                value={form.projectId ?? ''}
-                onChange={e =>
-                  setField(
-                    'projectId',
-                    e.target.value ? Number(e.target.value) : undefined
-                  )
-                }
-                disabled={isSaving || isLoadingProjects}
-              >
-                <option value="">
-                  {isLoadingProjects ? 'Loading projects…' : 'Choose a project…'}
-                </option>
-                {projectsLookup.map(p => (
-                  <option key={p.id} value={p.id}>
-                    {p.title}
-                  </option>
-                ))}
-              </select>
+          {!isLoadingProjects && projectsLookup.length === 0 && (
+            <div className={styles.psProjectPickerEmpty}>
+              No projects are assigned to you as Project Manager.
             </div>
-          </div>
+          )}
 
-          <div className={styles.psField}>
-            <label className={styles.psFieldLabel}>Health</label>
-            <div className={styles.psHealthPills}>
-              {(['Green', 'Yellow', 'Red'] as const).map(h => (
+          {!isLoadingProjects && projectsLookup.length > 0 && (
+            <div className={styles.psProjectList}>
+              {projectsLookup.map(project => (
                 <button
-                  key={h}
+                  key={project.id}
                   type="button"
-                  className={
-                    form.health === h
-                      ? `${styles.psHealthPill} ${styles.psHealthPillActive} ${healthPillClassMap[h]}`
-                      : `${styles.psHealthPill} ${healthPillClassMap[h]}`
-                  }
-                  onClick={() => setField('health', h)}
+                  className={styles.psProjectListItem}
+                  onClick={() => onProjectSelect(project.id)}
                   disabled={isSaving}
                 >
-                  <span className={styles.psHealthDot} />
-                  {h}
+                  <span className={styles.psProjectListTitle}>{project.title}</span>
+                  <span className={styles.psProjectListAction}>Select</span>
                 </button>
               ))}
             </div>
-          </div>
-
-          <div className={styles.psFieldGroup}>
-            <div className={styles.psField}>
-              <div className={styles.psFieldRow}>
-                <label className={styles.psFieldLabel}>Planned %</label>
-                <span className={styles.psFieldValue}>{form.plannedPercent}%</span>
+          )}
+        </div>
+      ) : (
+        <div className={styles.psFormShell}>
+          <div className={styles.psFormMain}>
+            <div className={styles.psComposerHeader}>
+              <div className={styles.psComposerAvatar}>
+                <span>DF</span>
               </div>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={5}
-                value={form.plannedPercent}
-                onChange={e => setField('plannedPercent', Number(e.target.value))}
-                className={styles.psSlider}
+              <div className={styles.psComposerMeta}>
+                <span className={styles.psComposerName}>
+                  Project status update
+                </span>
+                <span className={styles.psComposerProject}>
+                  {selectedProject || 'Selected project'}
+                </span>
+              </div>
+              <button
+                type="button"
+                className={styles.psSecondaryButton}
+                onClick={onChangeProject}
                 disabled={isSaving}
-              />
+              >
+                Change project
+              </button>
             </div>
 
-            <div className={styles.psField}>
-              <div className={styles.psFieldRow}>
-                <label className={styles.psFieldLabel}>Actual %</label>
-                <span className={styles.psFieldValue}>{form.actualPercent}%</span>
+            {narrativeFields.map(field => (
+              <div key={field.key} className={styles.psField}>
+                <label className={styles.psFieldLabel}>{field.label}</label>
+                <textarea
+                  className={styles.psTextArea}
+                  placeholder={field.placeholder}
+                  rows={3}
+                  value={form[field.key]}
+                  onChange={e => setField(field.key, e.target.value)}
+                  disabled={isSaving}
+                />
               </div>
-              <input
-                type="range"
-                min={0}
-                max={100}
-                step={5}
-                value={form.actualPercent}
-                onChange={e => setField('actualPercent', Number(e.target.value))}
-                className={`${styles.psSlider} ${styles.psSliderAccent}`}
-                disabled={isSaving}
-              />
-            </div>
+            ))}
           </div>
 
-          <div className={styles.psFormActions}>
-            <button
-              type="button"
-              className={styles.psPrimaryButton}
-              onClick={onSave}
-              disabled={isSaving || !form.projectId}
-            >
-              {isSaving ? 'Saving…' : 'Save update'}
-            </button>
-            <div className={styles.psFormHint}>
-              Updates appear on the dashboard after save.
+          <div className={styles.psFormSide}>
+            <div className={styles.psField}>
+              <label className={styles.psFieldLabel}>Health</label>
+              <div className={styles.psHealthPills}>
+                {(['Green', 'Yellow', 'Red'] as const).map(h => (
+                  <button
+                    key={h}
+                    type="button"
+                    className={
+                      form.health === h
+                        ? `${styles.psHealthPill} ${styles.psHealthPillActive} ${healthPillClassMap[h]}`
+                        : `${styles.psHealthPill} ${healthPillClassMap[h]}`
+                    }
+                    onClick={() => setField('health', h)}
+                    disabled={isSaving}
+                  >
+                    <span className={styles.psHealthDot} />
+                    {h}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.psFieldGroup}>
+              <div className={styles.psField}>
+                <div className={styles.psFieldRow}>
+                  <label className={styles.psFieldLabel}>Planned %</label>
+                  <span className={styles.psFieldValue}>{form.plannedPercent}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={form.plannedPercent}
+                  onChange={e => setField('plannedPercent', Number(e.target.value))}
+                  className={styles.psSlider}
+                  disabled={isSaving}
+                />
+              </div>
+
+              <div className={styles.psField}>
+                <div className={styles.psFieldRow}>
+                  <label className={styles.psFieldLabel}>Actual %</label>
+                  <span className={styles.psFieldValue}>{form.actualPercent}%</span>
+                </div>
+                <input
+                  type="range"
+                  min={0}
+                  max={100}
+                  step={5}
+                  value={form.actualPercent}
+                  onChange={e => setField('actualPercent', Number(e.target.value))}
+                  className={`${styles.psSlider} ${styles.psSliderAccent}`}
+                  disabled={isSaving}
+                />
+              </div>
+            </div>
+
+            <div className={styles.psFormActions}>
+              <button
+                type="button"
+                className={styles.psPrimaryButton}
+                onClick={onSave}
+                disabled={isSaving || !form.projectId}
+              >
+                {isSaving ? 'Saving…' : 'Save update'}
+              </button>
+              <div className={styles.psFormHint}>
+                Updates appear on the dashboard after save.
+              </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

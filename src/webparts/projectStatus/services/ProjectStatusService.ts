@@ -2,6 +2,11 @@ import { WebPartContext } from '@microsoft/sp-webpart-base';
 import { SPHttpClient, SPHttpClientResponse } from '@microsoft/sp-http';
 import { IProjectStatusItem } from '../components/IProjectStatusItem';
 
+export interface IProjectManagerAllocation {
+  managerName: string;
+  projectCount: number;
+}
+
 export class ProjectStatusService {
   private readonly factorySiteUrl: string =
     'https://bapco365.sharepoint.com/sites/DigitalFactory';
@@ -160,6 +165,49 @@ export class ProjectStatusService {
       id: p.Id,
       title: p.Title
     }));
+  }
+
+  /** Get project count per Project Manager across all projects */
+  public async getProjectManagerAllocations(): Promise<IProjectManagerAllocation[]> {
+    const projectManagerFieldInternalName = await this.getProjectManagerInternalName();
+    const url =
+      `${this.listUrl(this.projectsListTitle)}/items` +
+      `?$select=Id,${projectManagerFieldInternalName}/Title` +
+      `&$expand=${projectManagerFieldInternalName}` +
+      `&$top=5000`;
+
+    const response: SPHttpClientResponse = await this.context.spHttpClient.get(
+      url,
+      SPHttpClient.configurations.v1
+    );
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `Error getting PM allocation (site: ${this.factorySiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
+      );
+    }
+
+    const json = await response.json();
+    const projects = json.value || [];
+    const counts = new Map<string, number>();
+
+    projects.forEach((project: any) => {
+      const manager = project[projectManagerFieldInternalName];
+      const managerNames: string[] = Array.isArray(manager)
+        ? manager.map((m: any) => m?.Title).filter(Boolean)
+        : manager?.Title
+        ? [manager.Title]
+        : [];
+
+      managerNames.forEach(name => {
+        counts.set(name, (counts.get(name) || 0) + 1);
+      });
+    });
+
+    return Array.from(counts.entries())
+      .map(([managerName, projectCount]) => ({ managerName, projectCount }))
+      .sort((a, b) => b.projectCount - a.projectCount);
   }
 
   /** Create a new status row in "Projects Status" */

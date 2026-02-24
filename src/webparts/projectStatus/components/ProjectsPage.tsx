@@ -20,6 +20,7 @@ export const ProjectsPage: React.FC<IProjectsPageProps> = ({
   items,
   isLoading
 }) => {
+  const [selectedProjectId, setSelectedProjectId] = React.useState<number | undefined>();
   const latestByProject = new Map<number, IProjectStatusItem>();
 
   items.forEach(item => {
@@ -27,6 +28,9 @@ export const ProjectsPage: React.FC<IProjectsPageProps> = ({
       latestByProject.set(item.projectId, item);
     }
   });
+
+  const selectedProject = projects.find(p => p.id === selectedProjectId);
+  const selectedProjectUpdates = items.filter(i => i.projectId === selectedProjectId);
 
   return (
     <div className={styles.psSection}>
@@ -37,12 +41,18 @@ export const ProjectsPage: React.FC<IProjectsPageProps> = ({
         </span>
       </div>
 
-      <div className={styles.psFeedGrid}>
+      <div className={styles.psProjectsGrid}>
         {projects.map(project => {
           const latest = latestByProject.get(project.id);
 
           return (
-            <article key={project.id} className={styles.psFeedCard}>
+            <button
+              key={project.id}
+              type="button"
+              className={styles.psProjectCardButton}
+              onClick={() => setSelectedProjectId(project.id)}
+            >
+              <article className={styles.psFeedCard}>
               <header className={styles.psFeedHeader}>
                 <div className={styles.psFeedHeaderText}>
                   <div className={styles.psFeedProject}>{project.title}</div>
@@ -104,10 +114,76 @@ export const ProjectsPage: React.FC<IProjectsPageProps> = ({
                   No status submitted yet for this project.
                 </div>
               )}
-            </article>
+              </article>
+            </button>
           );
         })}
       </div>
+
+      {selectedProject && (
+        <div
+          className={styles.psModalOverlay}
+          role="button"
+          tabIndex={0}
+          onClick={() => setSelectedProjectId(undefined)}
+          onKeyDown={e => {
+            if (e.key === 'Enter' || e.key === 'Escape') {
+              setSelectedProjectId(undefined);
+            }
+          }}
+        >
+          <div
+            className={styles.psModal}
+            role="dialog"
+            aria-modal="true"
+            aria-label={`${selectedProject.title} details`}
+            onClick={e => e.stopPropagation()}
+          >
+            <div className={styles.psModalHeader}>
+              <h3>{selectedProject.title}</h3>
+              <button
+                type="button"
+                className={styles.psSecondaryButton}
+                onClick={() => setSelectedProjectId(undefined)}
+              >
+                Close
+              </button>
+            </div>
+
+            {selectedProjectUpdates.length === 0 ? (
+              <div className={styles.psInfoBanner}>
+                No status updates submitted for this project yet.
+              </div>
+            ) : (
+              <div className={styles.psModalContent}>
+                {selectedProjectUpdates.map(update => (
+                  <div key={update.id} className={styles.psCompareCard}>
+                    <div className={styles.psCompareMeta}>
+                      {new Date(update.created).toLocaleDateString()} by {update.createdBy}
+                    </div>
+                    <p>
+                      <strong>Health:</strong> {update.health}
+                    </p>
+                    <p>
+                      <strong>Planned / Actual:</strong> {update.plannedPercent ?? 0}% /{' '}
+                      {update.actualPercent ?? 0}%
+                    </p>
+                    <p>
+                      <strong>Activities:</strong> {update.activities || 'N/A'}
+                    </p>
+                    <p>
+                      <strong>Issues:</strong> {update.issues || 'N/A'}
+                    </p>
+                    <p>
+                      <strong>Next steps:</strong> {update.nextSteps || 'N/A'}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };

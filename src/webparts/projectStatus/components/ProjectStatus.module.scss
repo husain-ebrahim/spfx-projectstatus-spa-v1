@@ -378,6 +378,12 @@
   gap: 12px;
 }
 
+.psProjectsGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
 .psFeedCard {
   background: var(--ps-panel);
   border: 1px solid var(--ps-panel-border);
@@ -955,6 +961,10 @@
   }
 
   .psFeedGrid {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .psProjectsGrid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 

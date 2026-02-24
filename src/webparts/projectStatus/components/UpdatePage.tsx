@@ -170,9 +170,6 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
     if (checked && previousEntry) {
       setForm(prev => ({
         ...prev,
-        health: (previousEntry.health as HealthValue) || 'Green',
-        plannedPercent: previousEntry.plannedPercent ?? 0,
-        actualPercent: previousEntry.actualPercent ?? 0,
         activities: previousEntry.activities || '',
         issues: previousEntry.issues || '',
         nextSteps: previousEntry.nextSteps || ''
@@ -181,9 +178,10 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
     }
 
     setForm(prev => ({
-      ...defaultFormState,
-      projectId: prev.projectId,
-      health: prev.health
+      ...prev,
+      activities: '',
+      issues: '',
+      nextSteps: ''
     }));
   };
 
@@ -310,28 +308,6 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
                         </p>
                         <p>
                           <strong>Next steps:</strong> {previousEntry.nextSteps || 'N/A'}
-                        </p>
-                      </div>
-
-                      <div className={styles.psCompareCard}>
-                        <h4>New entry</h4>
-                        <div className={styles.psCompareMeta}>
-                          Current draft values you are about to submit.
-                        </div>
-                        <p>
-                          <strong>Health:</strong> {form.health}
-                        </p>
-                        <p>
-                          <strong>Planned / Actual:</strong> {form.plannedPercent}% / {form.actualPercent}%
-                        </p>
-                        <p>
-                          <strong>Activities:</strong> {form.activities || 'N/A'}
-                        </p>
-                        <p>
-                          <strong>Issues:</strong> {form.issues || 'N/A'}
-                        </p>
-                        <p>
-                          <strong>Next steps:</strong> {form.nextSteps || 'N/A'}
                         </p>
                       </div>
                     </div>

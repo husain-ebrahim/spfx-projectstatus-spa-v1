@@ -196,7 +196,13 @@
 
 .psKpiRow {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.psKpiStack {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
 }
 
@@ -209,6 +215,10 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.psKpiCardLarge {
+  grid-column: span 1;
 }
 
 .psKpiLabel {
@@ -580,7 +590,7 @@
 .psCompareGrid {
   margin-top: 10px;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(1, minmax(0, 1fr));
   gap: 10px;
 }
 
@@ -801,12 +811,66 @@
 }
 
 .psSlider {
+  --slider-color: #8093a6;
+  --slider-track: #dbe5ef;
   width: 100%;
-  accent-color: #8093a6;
+  height: 24px;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+}
+
+.psSlider::-webkit-slider-runnable-track {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--slider-track);
+}
+
+.psSlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  margin-top: -5px;
+  border: 2px solid #ffffff;
+  background: var(--slider-color);
+  box-shadow: 0 0 0 1px rgba(21, 112, 166, 0.25);
+}
+
+.psSlider::-moz-range-track {
+  height: 6px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--slider-track);
+}
+
+.psSlider::-moz-range-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: var(--slider-color);
+}
+
+.psSlider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  background: var(--slider-color);
+  box-shadow: 0 0 0 1px rgba(21, 112, 166, 0.25);
+}
+
+.psSlider:focus {
+  outline: none;
+}
+
+.psSlider:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
 }
 
 .psSliderAccent {
-  accent-color: var(--ps-accent);
+  --slider-color: var(--ps-accent);
 }
 
 .psFormActions {
@@ -870,6 +934,10 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .psKpiStack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .psFeedGrid {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
@@ -913,6 +981,10 @@
 
 @media (max-width: 640px) {
   .psKpiRow {
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+  }
+
+  .psKpiStack {
     grid-template-columns: repeat(1, minmax(0, 1fr));
   }
 

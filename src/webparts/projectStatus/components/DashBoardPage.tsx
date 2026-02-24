@@ -61,42 +61,43 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({
 
   return (
     <div className={styles.psDashboard}>
-      {/* KPI row */}
       <div className={styles.psKpiRow}>
-        <div className={styles.psKpiCard}>
-          <span className={styles.psKpiLabel}>Projects tracked</span>
-          <span className={styles.psKpiValue}>{uniqueProjects}</span>
-          <span className={styles.psKpiHint}>Distinct projects with at least one update</span>
+        <div className={styles.psKpiStack}>
+          <div className={styles.psKpiCard}>
+            <span className={styles.psKpiLabel}>Projects tracked</span>
+            <span className={styles.psKpiValue}>{uniqueProjects}</span>
+            <span className={styles.psKpiHint}>Distinct projects with at least one update</span>
+          </div>
+
+          <div className={styles.psKpiCard}>
+            <span className={styles.psKpiLabel}>Total updates</span>
+            <span className={styles.psKpiValue}>{totalUpdates}</span>
+            <span className={styles.psKpiHint}>All posts in Projects Status</span>
+          </div>
+
+          <div className={styles.psKpiCard}>
+            <span className={styles.psKpiLabel}>Delivery trend</span>
+            <span className={styles.psKpiValue}>
+              {plannedAvg}% / {actualAvg}%
+            </span>
+            <span
+              className={
+                variance >= 0 ? styles.psKpiDeltaPositive : styles.psKpiDeltaNegative
+              }
+            >
+              {variance >= 0 ? '+' : ''}
+              {variance} pts vs plan
+            </span>
+          </div>
+
+          <div className={styles.psKpiCard}>
+            <span className={styles.psKpiLabel}>Projects with open issues</span>
+            <span className={styles.psKpiValue}>{projectsWithIssues}</span>
+            <span className={styles.psKpiHint}>Projects where risks/blockers were reported</span>
+          </div>
         </div>
 
-        <div className={styles.psKpiCard}>
-          <span className={styles.psKpiLabel}>Total updates</span>
-          <span className={styles.psKpiValue}>{totalUpdates}</span>
-          <span className={styles.psKpiHint}>All posts in Projects Status</span>
-        </div>
-
-        <div className={styles.psKpiCard}>
-          <span className={styles.psKpiLabel}>Delivery trend</span>
-          <span className={styles.psKpiValue}>
-            {plannedAvg}% / {actualAvg}%
-          </span>
-          <span
-            className={
-              variance >= 0 ? styles.psKpiDeltaPositive : styles.psKpiDeltaNegative
-            }
-          >
-            {variance >= 0 ? '+' : ''}
-            {variance} pts vs plan
-          </span>
-        </div>
-
-        <div className={styles.psKpiCard}>
-          <span className={styles.psKpiLabel}>Projects with open issues</span>
-          <span className={styles.psKpiValue}>{projectsWithIssues}</span>
-          <span className={styles.psKpiHint}>Projects where risks/blockers were reported</span>
-        </div>
-
-        <div className={styles.psKpiCard}>
+        <div className={`${styles.psKpiCard} ${styles.psKpiCardLarge}`}>
           <span className={styles.psKpiLabel}>Resource allocation (PM)</span>
           <span className={styles.psKpiValue}>{avgProjectsPerPm}</span>
           <span className={styles.psKpiHint}>

@@ -16,6 +16,7 @@ export class ProjectStatusService {
   private readonly projectsListTitle: string = 'Projects';
   private readonly projectManagerFieldTitle: string = 'Project Manager';
   private projectManagerInternalName?: string;
+  private currentUserIdOnFactorySite?: number;
 
   constructor(private context: WebPartContext) {}
 
@@ -25,26 +26,50 @@ export class ProjectStatusService {
 
   /** Get currently logged in user's SharePoint ID */
   private async getCurrentUserId(): Promise<number> {
-    const pageUserId = Number(this.context.pageContext.legacyPageContext?.userId);
-    if (!isNaN(pageUserId) && pageUserId > 0) {
-      return pageUserId;
+    if (this.currentUserIdOnFactorySite) {
+      return this.currentUserIdOnFactorySite;
     }
 
-    const url = `${this.factorySiteUrl}/_api/web/currentuser?$select=Id`;
-    const response: SPHttpClientResponse = await this.context.spHttpClient.get(
-      url,
+    const loginName = this.context.pageContext.user.loginName;
+    if (loginName) {
+      const ensureUserUrl = `${this.factorySiteUrl}/_api/web/ensureuser`;
+      const ensureUserResponse = await this.context.spHttpClient.post(
+        ensureUserUrl,
+        SPHttpClient.configurations.v1,
+        {
+          headers: {
+            Accept: 'application/json;odata=nometadata',
+            'Content-type': 'application/json;odata=nometadata'
+          },
+          body: JSON.stringify({ logonName: loginName })
+        }
+      );
+
+      if (ensureUserResponse.ok) {
+        const ensuredUser = await ensureUserResponse.json();
+        if (ensuredUser?.Id) {
+          this.currentUserIdOnFactorySite = ensuredUser.Id;
+          return ensuredUser.Id;
+        }
+      }
+    }
+
+    const currentUserUrl = `${this.factorySiteUrl}/_api/web/currentuser?$select=Id`;
+    const currentUserResponse: SPHttpClientResponse = await this.context.spHttpClient.get(
+      currentUserUrl,
       SPHttpClient.configurations.v1
     );
 
-    if (!response.ok) {
-      const text = await response.text();
+    if (!currentUserResponse.ok) {
+      const text = await currentUserResponse.text();
       throw new Error(
-        `Error getting current user ID: ${response.status} ${response.statusText} - ${text}`
+        `Error getting current user ID on DigitalFactory site: ${currentUserResponse.status} ${currentUserResponse.statusText} - ${text}`
       );
     }
 
-    const json = await response.json();
-    return json.Id;
+    const currentUser = await currentUserResponse.json();
+    this.currentUserIdOnFactorySite = currentUser.Id;
+    return currentUser.Id;
   }
 
   /** Resolve and cache internal name of the "Project Manager" field */
@@ -145,7 +170,7 @@ export class ProjectStatusService {
       `${this.listUrl(this.projectsListTitle)}/items` +
       `?$select=Id,Title,${projectManagerFieldInternalName}/Id` +
       `&$expand=${projectManagerFieldInternalName}` +
-      `&$filter=${projectManagerFieldInternalName}/Id eq ${currentUserId}` +
+      `&$top=5000` +
       `&$orderby=Title`;
 
     const response: SPHttpClientResponse = await this.context.spHttpClient.get(
@@ -161,10 +186,21 @@ export class ProjectStatusService {
     }
 
     const json = await response.json();
-    return (json.value || []).map((p: any) => ({
-      id: p.Id,
-      title: p.Title
-    }));
+    return (json.value || [])
+      .filter((project: any) => {
+        const pm = project[projectManagerFieldInternalName];
+        const pmIds: number[] = Array.isArray(pm)
+          ? pm.map((u: any) => u?.Id).filter((id: number) => !!id)
+          : pm?.Id
+          ? [pm.Id]
+          : [];
+
+        return pmIds.indexOf(currentUserId) > -1;
+      })
+      .map((p: any) => ({
+        id: p.Id,
+        title: p.Title
+      }));
   }
 
   /** Get project count per Project Manager across all projects */

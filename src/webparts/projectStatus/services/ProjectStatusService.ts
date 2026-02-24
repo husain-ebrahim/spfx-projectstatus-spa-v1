@@ -232,6 +232,31 @@ export class ProjectStatusService {
       }));
   }
 
+  /** Get all projects without PM filtering */
+  public async getAllProjectsLookup(): Promise<{ id: number; title: string }[]> {
+    const url =
+      `${this.listUrl(this.projectsListTitle)}/items` +
+      `?$select=Id,Title&$orderby=Title&$top=5000`;
+
+    const response: SPHttpClientResponse = await this.context.spHttpClient.get(
+      url,
+      SPHttpClient.configurations.v1
+    );
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(
+        `Error getting all projects (site: ${this.factorySiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
+      );
+    }
+
+    const json = await response.json();
+    return (json.value || []).map((p: any) => ({
+      id: p.Id,
+      title: p.Title
+    }));
+  }
+
   /** Get project count per Project Manager across all projects */
   public async getProjectManagerAllocations(): Promise<IProjectManagerAllocation[]> {
     const projectManagerFieldInternalName = await this.getProjectManagerInternalName();

@@ -28,7 +28,7 @@
 }
 
 .sideNav {
-  background: linear-gradient(180deg, #07114c 0%, #1c6ee4 100%);
+  background: #07114c;
   color: #ffffff;
   border-right: 1px solid rgba(255, 255, 255, 0.24);
   padding: 26px 18px;
@@ -103,6 +103,22 @@
   background: rgba(249, 0, 25, 0.26);
   color: #ffffff;
   border-color: rgba(255, 255, 255, 0.45);
+}
+
+.sideNavItemPrimary {
+  background: rgba(100, 52, 250, 0.28);
+  border-color: rgba(255, 255, 255, 0.32);
+  color: #ffffff;
+}
+
+.sideNavItemPrimary:hover {
+  background: rgba(100, 52, 250, 0.4);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.sideNavItemPrimaryActive {
+  background: rgba(249, 0, 25, 0.4);
+  border-color: rgba(255, 255, 255, 0.52);
 }
 
 .sideNavItemIcon {

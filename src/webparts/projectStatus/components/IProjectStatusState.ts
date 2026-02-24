@@ -1,6 +1,6 @@
 import { IProjectStatusItem } from './IProjectStatusItem';
 
-export type PageKey = 'dashboard' | 'addUpdate';
+export type PageKey = 'addUpdate' | 'dashboard' | 'projects';
 
 export interface IProjectStatusState {
   items: IProjectStatusItem[];

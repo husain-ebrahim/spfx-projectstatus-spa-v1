@@ -19,6 +19,7 @@ import {
 
 import { DashboardPage } from './DashBoardPage';
 import { UpdatePage } from './UpdatePage';
+import { ProjectsPage } from './ProjectsPage';
 
 import styles from './ProjectStatus.module.scss';
 
@@ -32,27 +33,30 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
 
   const [items, setItems] = useState<IProjectStatusItem[]>([]);
   const [projectsLookup, setProjectsLookup] = useState<IProjectLookup[]>([]);
+  const [allProjectsLookup, setAllProjectsLookup] = useState<IProjectLookup[]>([]);
   const [projectManagerAllocations, setProjectManagerAllocations] = useState<
     IProjectManagerAllocation[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingProjects, setIsLoadingProjects] = useState(true);
   const [error, setError] = useState<string>();
-  const [currentPage, setCurrentPage] = useState<PageKey>('dashboard');
+  const [currentPage, setCurrentPage] = useState<PageKey>('addUpdate');
   const [lastRefresh, setLastRefresh] = useState<Date>(new Date());
 
   const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(undefined);
-      const [statuses, projects, pmAllocations] = await Promise.all([
+      const [statuses, projects, allProjects, pmAllocations] = await Promise.all([
         service.getStatuses(),
         service.getProjectsLookup(),
+        service.getAllProjectsLookup(),
         service.getProjectManagerAllocations()
       ]);
 
       setItems(statuses);
       setProjectsLookup(projects);
+      setAllProjectsLookup(allProjects);
       setProjectManagerAllocations(pmAllocations);
       setLastRefresh(new Date());
     } catch (err: any) {
@@ -79,9 +83,12 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
   };
 
   const isDashboard = currentPage === 'dashboard';
+  const isAddUpdate = currentPage === 'addUpdate';
+  const isProjects = currentPage === 'projects';
   const navigationItems: { key: PageKey; icon: string; label: string }[] = [
+    { key: 'addUpdate', icon: 'Add', label: 'Add update' },
     { key: 'dashboard', icon: 'LineChart', label: 'Dashboard' },
-    { key: 'addUpdate', icon: 'Add', label: 'Add update' }
+    { key: 'projects', icon: 'BulletedList', label: 'All projects' }
   ];
 
   return (
@@ -103,8 +110,12 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
                 key={item.key}
                 className={
                   currentPage === item.key
-                    ? `${styles.sideNavItem} ${styles.sideNavItemActive}`
-                    : styles.sideNavItem
+                    ? `${styles.sideNavItem} ${styles.sideNavItemActive} ${
+                        item.key === 'addUpdate' ? styles.sideNavItemPrimaryActive : ''
+                      }`
+                    : `${styles.sideNavItem} ${
+                        item.key === 'addUpdate' ? styles.sideNavItemPrimary : ''
+                      }`
                 }
                 onClick={() => setCurrentPage(item.key)}
                 type="button"
@@ -126,12 +137,18 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
           <header className={styles.appMainHeader}>
             <div>
               <h1 className={styles.appMainTitle}>
-                {isDashboard ? 'Portfolio dashboard' : 'Add status update'}
+                {isAddUpdate
+                  ? 'Add status update'
+                  : isDashboard
+                  ? 'Portfolio dashboard'
+                  : 'Projects directory'}
               </h1>
               <p className={styles.appMainSubtitle}>
-                {isDashboard
+                {isAddUpdate
+                  ? 'Capture a new status update for a project in the Digital Factory portfolio.'
+                  : isDashboard
                   ? 'Overview of project health, KPIs and the latest status entries.'
-                  : 'Capture a new status update for a project in the Digital Factory portfolio.'}
+                  : 'Browse all projects and review their latest submitted status.'}
               </p>
             </div>
 
@@ -179,6 +196,14 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
                     projectsLookup={projectsLookup}
                     isLoadingProjects={isLoadingProjects}
                     onCreated={onStatusCreated}
+                  />
+                )}
+
+                {isProjects && (
+                  <ProjectsPage
+                    projects={allProjectsLookup}
+                    items={items}
+                    isLoading={isLoading}
                   />
                 )}
               </>

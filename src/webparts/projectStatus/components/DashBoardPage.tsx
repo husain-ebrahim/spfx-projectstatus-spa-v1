@@ -1,8 +1,11 @@
 import * as React from 'react';
-import { IProjectStatusItem } from './IProjectStatusItem';
 import { Label } from '@fluentui/react';
-import styles from './ProjectStatus.module.scss';
+import { IProjectStatusItem } from './IProjectStatusItem';
 import { IProjectManagerAllocation } from '../services/ProjectStatusService';
+import { KpiCard } from './dashboard/KpiCard';
+import { AllocationKpiCard } from './dashboard/AllocationKpiCard';
+import { StatusUpdateCard } from './dashboard/StatusUpdateCard';
+import styles from './ProjectStatus.module.scss';
 
 interface IDashboardPageProps {
   items: IProjectStatusItem[];
@@ -44,97 +47,39 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({
   const projectsWithIssues = new Set(
     items.filter(i => i.issues && i.issues.trim().length > 0).map(i => i.projectId)
   ).size;
+
   const healthRatioTotal =
     healthCounts.green + healthCounts.yellow + healthCounts.red || 1;
-  const healthWidth = (count: number) =>
+
+  const healthWidth = (count: number): string =>
     `${Math.round((count / healthRatioTotal) * 100)}%`;
-  const pmCount = projectManagerAllocations.length;
-  const totalPmProjects = projectManagerAllocations.reduce(
-    (sum, pm) => sum + pm.projectCount,
-    0
-  );
-  const avgProjectsPerPm =
-    pmCount > 0 ? (totalPmProjects / pmCount).toFixed(1) : '0.0';
-  const maxAllocation = projectManagerAllocations[0];
-  const topAllocations = projectManagerAllocations.slice(0, 5);
-  const topAllocationCount = topAllocations[0]?.projectCount || 1;
 
   return (
     <div className={styles.psDashboard}>
       <div className={styles.psKpiRow}>
         <div className={styles.psKpiStack}>
-          <div className={styles.psKpiCard}>
-            <span className={styles.psKpiLabel}>Projects tracked</span>
-            <span className={styles.psKpiValue}>{uniqueProjects}</span>
-            <span className={styles.psKpiHint}>Distinct projects with at least one update</span>
-          </div>
-
-          <div className={styles.psKpiCard}>
-            <span className={styles.psKpiLabel}>Total updates</span>
-            <span className={styles.psKpiValue}>{totalUpdates}</span>
-            <span className={styles.psKpiHint}>All posts in Projects Status</span>
-          </div>
-
-          <div className={styles.psKpiCard}>
-            <span className={styles.psKpiLabel}>Delivery trend</span>
-            <span className={styles.psKpiValue}>
-              {plannedAvg}% / {actualAvg}%
-            </span>
-            <span
-              className={
-                variance >= 0 ? styles.psKpiDeltaPositive : styles.psKpiDeltaNegative
-              }
-            >
-              {variance >= 0 ? '+' : ''}
-              {variance} pts vs plan
-            </span>
-          </div>
-
-          <div className={styles.psKpiCard}>
-            <span className={styles.psKpiLabel}>Projects with open issues</span>
-            <span className={styles.psKpiValue}>{projectsWithIssues}</span>
-            <span className={styles.psKpiHint}>Projects where risks/blockers were reported</span>
-          </div>
+          <KpiCard
+            label="Projects tracked"
+            value={uniqueProjects}
+            hint="Distinct projects with at least one update"
+          />
+          <KpiCard label="Total updates" value={totalUpdates} hint="All posts in Projects Status" />
+          <KpiCard
+            label="Delivery trend"
+            value={`${plannedAvg}% / ${actualAvg}%`}
+            delta={`${variance >= 0 ? '+' : ''}${variance} pts vs plan`}
+            deltaPositive={variance >= 0}
+          />
+          <KpiCard
+            label="Projects with open issues"
+            value={projectsWithIssues}
+            hint="Projects where risks/blockers were reported"
+          />
         </div>
 
-        <div className={`${styles.psKpiCard} ${styles.psKpiCardLarge}`}>
-          <span className={styles.psKpiLabel}>Resource allocation (PM)</span>
-          <span className={styles.psKpiValue}>{avgProjectsPerPm}</span>
-          <span className={styles.psKpiHint}>
-            Avg projects per PM across {pmCount} PMs
-          </span>
-          <div className={styles.psAllocationChart}>
-            {topAllocations.length > 0 ? (
-              topAllocations.map(pm => (
-                <div key={pm.managerName} className={styles.psAllocationRow}>
-                  <span className={styles.psAllocationName}>{pm.managerName}</span>
-                  <div className={styles.psAllocationBarTrack}>
-                    <div
-                      className={styles.psAllocationBarFill}
-                      style={{
-                        width: `${Math.max(
-                          8,
-                          Math.round((pm.projectCount / topAllocationCount) * 100)
-                        )}%`
-                      }}
-                    />
-                  </div>
-                  <span className={styles.psAllocationCount}>{pm.projectCount}</span>
-                </div>
-              ))
-            ) : (
-              <span className={styles.psAllocationEmpty}>No PM allocation data</span>
-            )}
-          </div>
-          {maxAllocation && (
-            <span className={styles.psKpiHint}>
-              Highest allocation: {maxAllocation.managerName} ({maxAllocation.projectCount})
-            </span>
-          )}
-        </div>
+        <AllocationKpiCard allocations={projectManagerAllocations} />
       </div>
 
-      {/* Health strip */}
       <div className={styles.psHealthStrip}>
         <Label>Portfolio health distribution</Label>
         <div className={styles.psHealthStripBar}>
@@ -166,78 +111,8 @@ export const DashboardPage: React.FC<IDashboardPageProps> = ({
         )}
 
         <div className={styles.psFeedGrid}>
-          {latestItems.map(i => (
-            <article key={i.id} className={styles.psFeedCard}>
-              <header className={styles.psFeedHeader}>
-                <div className={styles.psFeedHeaderText}>
-                  <div className={styles.psFeedProject}>{i.projectTitle || 'Unknown project'}</div>
-                  <div className={styles.psFeedMeta}>
-                    <span>{new Date(i.created).toLocaleDateString()}</span>
-                    <span className={styles.psFeedDot}>|</span>
-                    <span>{i.createdBy}</span>
-                  </div>
-                </div>
-                <div
-                  className={`${styles.psHealthBadge} ${
-                    i.health === 'Green'
-                      ? styles.psHealthGreenBadge
-                      : i.health === 'Yellow'
-                      ? styles.psHealthYellowBadge
-                      : i.health === 'Red'
-                      ? styles.psHealthRedBadge
-                      : ''
-                  }`}
-                >
-                  {i.health}
-                </div>
-              </header>
-
-              <div className={styles.psFeedProgressRow}>
-                <div className={styles.psFeedStat}>
-                  <span className={styles.psFeedStatLabel}>Planned</span>
-                  <span className={styles.psFeedStatValue}>
-                    {i.plannedPercent ?? 0}%
-                  </span>
-                </div>
-                <div className={styles.psFeedStat}>
-                  <span className={styles.psFeedStatLabel}>Actual</span>
-                  <span className={styles.psFeedStatValue}>
-                    {i.actualPercent ?? 0}%
-                  </span>
-                </div>
-              </div>
-              <div className={styles.psCardProgressBar}>
-                <div
-                  className={`${styles.psCardProgressFill} ${styles.psCardProgressPlanned}`}
-                  style={{ width: `${i.plannedPercent || 0}%` }}
-                />
-                <div
-                  className={`${styles.psCardProgressFill} ${styles.psCardProgressActual} ${styles.psCardProgressOverlay}`}
-                  style={{ width: `${i.actualPercent || 0}%` }}
-                />
-              </div>
-
-              {i.activities && (
-                <div className={styles.psFeedSection}>
-                  <span className={styles.psFeedSectionLabel}>Activities</span>
-                  <p>{i.activities}</p>
-                </div>
-              )}
-
-              {i.issues && (
-                <div className={styles.psFeedSection}>
-                  <span className={styles.psFeedSectionLabel}>Issues</span>
-                  <p>{i.issues}</p>
-                </div>
-              )}
-
-              {i.nextSteps && (
-                <div className={styles.psFeedSection}>
-                  <span className={styles.psFeedSectionLabel}>Next steps</span>
-                  <p>{i.nextSteps}</p>
-                </div>
-              )}
-            </article>
+          {latestItems.map(item => (
+            <StatusUpdateCard key={item.id} item={item} />
           ))}
         </div>
       </div>

@@ -1,13 +1,13 @@
 :root {
-  --ps-bg-start: #eef3f8;
-  --ps-bg-end: #f8fafc;
+  --ps-bg-start: #eef1ff;
+  --ps-bg-end: #ffffff;
   --ps-panel: #ffffff;
-  --ps-panel-border: #d7e0ea;
-  --ps-text: #1b2b3a;
-  --ps-text-muted: #5d6f82;
-  --ps-brand: #0e4f7d;
-  --ps-brand-soft: #d8e9f6;
-  --ps-accent: #1570a6;
+  --ps-panel-border: #d8ddff;
+  --ps-text: #07114c;
+  --ps-text-muted: #43529b;
+  --ps-brand: #07114c;
+  --ps-brand-soft: #ece9ff;
+  --ps-accent: #1c6ee4;
   --ps-shadow: 0 16px 30px rgba(11, 35, 57, 0.08);
 }
 
@@ -28,9 +28,9 @@
 }
 
 .sideNav {
-  background: linear-gradient(180deg, #0b2d46 0%, #0f3b5d 100%);
-  color: #eaf2f9;
-  border-right: 1px solid rgba(172, 197, 219, 0.3);
+  background: linear-gradient(180deg, #07114c 0%, #1c6ee4 100%);
+  color: #ffffff;
+  border-right: 1px solid rgba(255, 255, 255, 0.24);
   padding: 26px 18px;
   display: flex;
   flex-direction: column;
@@ -47,7 +47,7 @@
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: linear-gradient(140deg, #2ca58d 0%, #2d7db4 100%);
+  background: linear-gradient(140deg, #6434fa 0%, #f90019 100%);
   font-size: 15px;
   font-weight: 700;
   display: flex;
@@ -69,7 +69,7 @@
 
 .sideNavBrandSubtitle {
   font-size: 11px;
-  color: #b7cce0;
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .sideNavNav {
@@ -82,7 +82,7 @@
   width: 100%;
   border: 1px solid transparent;
   background: transparent;
-  color: #d8e7f4;
+  color: #ffffff;
   border-radius: 10px;
   padding: 9px 11px;
   text-align: left;
@@ -95,14 +95,14 @@
 }
 
 .sideNavItem:hover {
-  background: rgba(180, 211, 237, 0.15);
-  border-color: rgba(180, 211, 237, 0.34);
+  background: rgba(255, 255, 255, 0.16);
+  border-color: rgba(255, 255, 255, 0.34);
 }
 
 .sideNavItemActive {
-  background: rgba(255, 255, 255, 0.18);
+  background: rgba(249, 0, 25, 0.26);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.3);
+  border-color: rgba(255, 255, 255, 0.45);
 }
 
 .sideNavItemIcon {
@@ -115,7 +115,7 @@
 
 .sideNavFooter {
   margin-top: auto;
-  border-top: 1px solid rgba(190, 215, 236, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.25);
   padding-top: 12px;
   display: flex;
   flex-direction: column;
@@ -126,12 +126,12 @@
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  color: #b7cce0;
+  color: rgba(255, 255, 255, 0.72);
 }
 
 .sideNavEnvValue {
   font-size: 12px;
-  color: #eaf2f9;
+  color: #ffffff;
 }
 
 .appMain {
@@ -285,7 +285,7 @@
 .psAllocationBarFill {
   height: 100%;
   border-radius: 999px;
-  background: linear-gradient(90deg, #2ca58d 0%, #1570a6 100%);
+  background: linear-gradient(90deg, #6434fa 0%, #1c6ee4 100%);
 }
 
 .psAllocationCount {
@@ -349,7 +349,7 @@
 
 .psSectionTag {
   background: var(--ps-brand-soft);
-  color: var(--ps-brand);
+  color: #6434fa;
   border-radius: 999px;
   padding: 4px 10px;
   font-size: 12px;
@@ -546,8 +546,8 @@
 }
 
 .psProjectListItem:hover {
-  border-color: #66a7ce;
-  box-shadow: 0 0 0 2px rgba(21, 112, 166, 0.15);
+  border-color: #1c6ee4;
+  box-shadow: 0 0 0 2px rgba(28, 110, 228, 0.18);
 }
 
 .psProjectListTitle {
@@ -558,7 +558,7 @@
 }
 
 .psProjectListAction {
-  color: var(--ps-brand);
+  color: #6434fa;
   font-size: 12px;
   font-weight: 600;
 }
@@ -730,8 +730,8 @@
 .psTextArea:focus,
 .psSelect:focus {
   outline: none;
-  border-color: #66a7ce;
-  box-shadow: 0 0 0 2px rgba(21, 112, 166, 0.15);
+  border-color: #1c6ee4;
+  box-shadow: 0 0 0 2px rgba(28, 110, 228, 0.16);
   background: #ffffff;
 }
 
@@ -811,7 +811,7 @@
 }
 
 .psSlider {
-  --slider-color: #8093a6;
+  --slider-color: #1c6ee4;
   --slider-track: #dbe5ef;
   width: 100%;
   height: 24px;
@@ -883,7 +883,7 @@
 .psPrimaryButton {
   border: none;
   border-radius: 10px;
-  background: linear-gradient(140deg, #1570a6 0%, #125a87 100%);
+  background: linear-gradient(140deg, #1c6ee4 0%, #6434fa 100%);
   color: #ffffff;
   font-size: 13px;
   font-weight: 700;
@@ -906,7 +906,7 @@
   border: 1px solid #c9d7e4;
   border-radius: 10px;
   background: #ffffff;
-  color: var(--ps-brand);
+  color: #1c6ee4;
   font-size: 12px;
   font-weight: 600;
   padding: 7px 10px;

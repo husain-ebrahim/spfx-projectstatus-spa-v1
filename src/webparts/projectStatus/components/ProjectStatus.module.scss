@@ -46,8 +46,6 @@
 .sideNavBrandMark {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
-  background: linear-gradient(140deg, #6434fa 0%, #f90019 100%);
   font-size: 15px;
   font-weight: 700;
   display: flex;
@@ -83,7 +81,7 @@
   border: 1px solid transparent;
   background: transparent;
   color: #ffffff;
-  border-radius: 10px;
+  border-radius: 8px;
   padding: 9px 11px;
   text-align: left;
   display: flex;
@@ -96,30 +94,27 @@
 
 .sideNavItem:hover {
   background: rgba(255, 255, 255, 0.16);
-  border-color: rgba(255, 255, 255, 0.34);
 }
 
 .sideNavItemActive {
-  background: rgba(28, 110, 228, 0.36);
+  background: rgba(255, 255, 255, 0.16);
   color: #ffffff;
-  border-color: rgba(255, 255, 255, 0.45);
 }
 
 .sideNavItemPrimary {
   background: #31e7df;
-  border-color: #31e7df;
   color: #07114c;
 }
 
 .sideNavItemPrimary:hover {
-  background: #25cbc4;
-  border-color: #25cbc4;
+  background: #31e7df;
+  color: #07114c;
 }
 
 .sideNavItemPrimaryActive {
-  background: #1c6ee4;
-  border-color: #1c6ee4;
+  background: #25cbc4;
   color: #ffffff;
+  border-color: #21aaa3;;
 }
 
 .sideNavItemIcon {

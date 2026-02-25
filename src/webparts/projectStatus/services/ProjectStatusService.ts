@@ -8,7 +8,7 @@ export interface IProjectManagerAllocation {
 }
 
 export class ProjectStatusService {
-  private readonly factorySiteUrl: string =
+  private readonly baseSiteUrl: string =
     'https://bapco365.sharepoint.com/sites/DigitalFactory';
 
   // List titles
@@ -21,7 +21,7 @@ export class ProjectStatusService {
   constructor(private context: WebPartContext) {}
 
   private listUrl(listTitle: string): string {
-    return `${this.factorySiteUrl}/_api/web/lists/getByTitle('${listTitle}')`;
+    return `${this.baseSiteUrl}/_api/web/lists/getByTitle('${listTitle}')`;
   }
 
   /** Get currently logged in user's SharePoint ID */
@@ -32,7 +32,7 @@ export class ProjectStatusService {
 
     const loginName = this.context.pageContext.user.loginName;
     if (loginName) {
-      const ensureUserUrl = `${this.factorySiteUrl}/_api/web/ensureuser`;
+      const ensureUserUrl = `${this.baseSiteUrl}/_api/web/ensureuser`;
       const ensureUserResponse = await this.context.spHttpClient.post(
         ensureUserUrl,
         SPHttpClient.configurations.v1,
@@ -54,7 +54,7 @@ export class ProjectStatusService {
       }
     }
 
-    const currentUserUrl = `${this.factorySiteUrl}/_api/web/currentuser?$select=Id`;
+    const currentUserUrl = `${this.baseSiteUrl}/_api/web/currentuser?$select=Id`;
     const currentUserResponse: SPHttpClientResponse = await this.context.spHttpClient.get(
       currentUserUrl,
       SPHttpClient.configurations.v1
@@ -138,7 +138,7 @@ export class ProjectStatusService {
     if (!response.ok) {
       const text = await response.text();
       throw new Error(
-        `Error getting statuses (site: ${this.factorySiteUrl}, list: ${this.statusListTitle}): ${response.status} ${response.statusText} - ${text}`
+        `Error getting statuses (site: ${this.baseSiteUrl}, list: ${this.statusListTitle}): ${response.status} ${response.statusText} - ${text}`
       );
     }
 
@@ -210,7 +210,7 @@ export class ProjectStatusService {
     if (!response.ok) {
       const text = await response.text();
       throw new Error(
-        `Error getting projects (site: ${this.factorySiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
+        `Error getting projects (site: ${this.baseSiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
       );
     }
 
@@ -246,7 +246,7 @@ export class ProjectStatusService {
     if (!response.ok) {
       const text = await response.text();
       throw new Error(
-        `Error getting all projects (site: ${this.factorySiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
+        `Error getting all projects (site: ${this.baseSiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
       );
     }
 
@@ -274,7 +274,7 @@ export class ProjectStatusService {
     if (!response.ok) {
       const text = await response.text();
       throw new Error(
-        `Error getting PM allocation (site: ${this.factorySiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
+        `Error getting PM allocation (site: ${this.baseSiteUrl}, list: ${this.projectsListTitle}): ${response.status} ${response.statusText} - ${text}`
       );
     }
 
@@ -348,7 +348,7 @@ export class ProjectStatusService {
     if (!response.ok) {
       const text = await response.text();
       throw new Error(
-        `Error creating status (site: ${this.factorySiteUrl}, list: ${this.statusListTitle}): ${response.status} ${response.statusText} - ${text}`
+        `Error creating status (site: ${this.baseSiteUrl}, list: ${this.statusListTitle}): ${response.status} ${response.statusText} - ${text}`
       );
     }
   }

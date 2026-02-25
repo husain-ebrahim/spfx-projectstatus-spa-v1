@@ -19,6 +19,7 @@ import {
 import { DashboardPage } from './DashBoardPage';
 import { UpdatePage } from './UpdatePage';
 import { ProjectsPage } from './ProjectsPage';
+import Logo from '../assets/Symbol-Color.png';
 
 import styles from './ProjectStatus.module.scss';
 
@@ -96,7 +97,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
         {/* SIDE NAVIGATION */}
         <aside className={styles.sideNav}>
           <div className={styles.sideNavHeader}>
-            <div className={styles.sideNavBrandMark}>DF</div>
+            <img src={Logo} alt="Bapco energies" className={styles.sideNavBrandMark} />
             <div className={styles.sideNavBrandText}>
               <span className={styles.sideNavBrandTitle}>Digital Factory</span>
               <span className={styles.sideNavBrandSubtitle}>Projects Status</span>

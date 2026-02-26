@@ -93,9 +93,10 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
 
   return (
     <div className={styles.appRoot}>
-      <div className={styles.appShell}>
+      {/* <div className={styles.appShell}> */}
+        <div>
         {/* SIDE NAVIGATION */}
-        <aside className={styles.sideNav}>
+        {/* <aside className={styles.sideNav}>
           <div className={styles.sideNavHeader}>
             <img src={Logo} alt="Bapco energies" className={styles.sideNavBrandMark} />
             <div className={styles.sideNavBrandText}>
@@ -130,7 +131,7 @@ export const ProjectStatus: React.FC<IProjectStatusProps> = ({ context }) => {
             <span className={styles.sideNavEnvLabel}>Site:</span>
             <span className={styles.sideNavEnvValue}>Projects Status</span>
           </div>
-        </aside>
+        </aside> */}
 
         {/* MAIN AREA */}
         <main className={styles.appMain}>

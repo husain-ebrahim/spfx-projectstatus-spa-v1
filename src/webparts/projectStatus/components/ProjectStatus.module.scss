@@ -630,7 +630,7 @@
 .psProjectList {
   margin-top: 12px;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  //grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 10px;
 }
 
@@ -651,11 +651,25 @@
   box-shadow: 0 0 0 2px rgba(28, 110, 228, 0.18);
 }
 
+.psProjectListTitle,
+.psProjectListSubTitle {
+  display: block;      
+  text-align: left;
+}
+
+.psProjectListWrap {
+  display: flex;
+  flex-direction: column; 
+  align-items: flex-start; 
+}
+
 .psProjectListTitle {
   font-size: 13px;
   font-weight: 600;
-  color: var(--ps-text);
-  text-align: left;
+}
+
+.psProjectListSubTitle {
+  font-size: 10px;
 }
 
 .psProjectListAction {

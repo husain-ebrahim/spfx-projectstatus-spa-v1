@@ -29,7 +29,7 @@ const defaultFormState: IUpdateFormState = {
   actualPercent: 0,
   activities: '',
   issues: '',
-  nextSteps: ''
+  nextSteps: '',
 };
 
 const healthPillClassMap: Record<HealthValue, string> = {
@@ -236,7 +236,10 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
                   onClick={() => onProjectSelect(project.id)}
                   disabled={isSaving}
                 >
+                  <div className={styles.psProjectListWrap}>
                   <span className={styles.psProjectListTitle}>{project.title}</span>
+                  <span className={styles.psProjectListSubTitle}>{'Last Updated: '}</span>
+                  </div>
                   <span className={styles.psProjectListAction}>Select</span>
                 </button>
               ))}
@@ -247,9 +250,7 @@ export const UpdatePage: React.FC<IUpdatePageProps> = ({
         <div className={styles.psFormShell}>
           <div className={styles.psFormMain}>
             <div className={styles.psComposerHeader}>
-              <div className={styles.psComposerAvatar}>
-                <span>DF</span>
-              </div>
+             
               <div className={styles.psComposerMeta}>
                 <span className={styles.psComposerName}>
                   Project status update

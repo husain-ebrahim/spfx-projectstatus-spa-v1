@@ -72,7 +72,6 @@ export class ProjectStatusService {
     return currentUser.Id;
   }
 
-  /** Resolve and cache internal name of the "Project Manager" field */
   private async getProjectManagerInternalName(): Promise<string> {
     if (this.projectManagerInternalName) {
       return this.projectManagerInternalName;
@@ -107,7 +106,7 @@ export class ProjectStatusService {
     return internalName;
   }
 
-  /** Get status items from "Projects Status" */
+  /** Get status items from Projects Status */
   public async getStatuses(): Promise<IProjectStatusItem[]> {
 
     const url =
@@ -125,7 +124,8 @@ export class ProjectStatusService {
         'Planned_x0025_',
         'Actual_x0025_',
         'Created',
-        'Author/Title'
+        'Author/Title',
+        'Modified'
       ].join(',') +
       `&$expand=Project,Author` +
       `&$orderby=Created desc`;
